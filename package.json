@@ -1,0 +1,49 @@
+{
+  "name": "gwhcp_gui",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@ag-grid-community/vue3": "~26.1.2",
+    "@ckeditor/ckeditor5-build-classic": "~31.0.0",
+    "@ckeditor/ckeditor5-vue": "~2.0.1",
+    "@fortawesome/fontawesome-svg-core": "~1.2.36",
+    "@fortawesome/free-regular-svg-icons": "~5.15.4",
+    "@fortawesome/free-solid-svg-icons": "~5.15.4",
+    "@fortawesome/vue-fontawesome": "~3.0.0-5",
+    "ag-grid-vue3": "~26.1.2",
+    "axios": "~0.24.0",
+    "bootstrap": "~5.1.3",
+    "core-js": "~3.19.1",
+    "mitt": "~3.0.0",
+    "moment": "~2.29.1",
+    "moment-timezone": "~0.5.34",
+    "vee-validate": "~4.5.4",
+    "vue": "~3.2.21",
+    "vue-loading-overlay": "~4.0.4",
+    "vue-multiselect": "~3.0.0-alpha.2",
+    "vue-router": "~4.0.12",
+    "vue3-country-region-select": "~1.0.0",
+    "yup": "~0.32.11"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "~5.3.1",
+    "@typescript-eslint/parser": "~5.3.1",
+    "@vue/cli": "~5.0.0-rc.0",
+    "@vue/cli-plugin-eslint": "~5.0.0-rc.0",
+    "@vue/cli-plugin-router": "~5.0.0-rc.0",
+    "@vue/cli-plugin-typescript": "~5.0.0-rc.0",
+    "@vue/cli-service": "~5.0.0-rc.0",
+    "@vue/eslint-config-typescript": "~9.0.1",
+    "eslint": "~8.2.0",
+    "eslint-plugin-vue": "~8.0.3",
+    "npm-check-updates": "~12.0.2",
+    "sass": "~1.43.4",
+    "sass-loader": "~12.3.0",
+    "typescript": "~4.4.4"
+  }
+}
