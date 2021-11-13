@@ -47,9 +47,9 @@
 
 <script lang="ts">
 import { InputSwitch, StaticData } from "@/components";
-import { useAuth, useAdminCompanyDns } from "@/composables";
+import { useAdminCompanyDns, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { boolean, object } from "yup";
 
@@ -61,25 +61,13 @@ export default defineComponent({
         StaticData
     },
     setup() {
-        const { hasPermForm } = useAuth();
+        const { formErrors, formObj, formSuccess, getProfile, updateProfile } = useAdminCompanyDns();
 
-        const { getProfile, localCompanyDns, updateProfile } = useAdminCompanyDns();
+        const { hasPermForm } = useAuth();
 
         const route = useRoute();
 
         const domainId = route.params.id.toString();
-
-        const formErrors = computed(() => {
-            return localCompanyDns.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localCompanyDns.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localCompanyDns.formSuccess;
-        });
 
         const schema = object({
             manage_dns: boolean()

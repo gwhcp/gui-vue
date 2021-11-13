@@ -1,5 +1,5 @@
 <template>
-    <div v-if="selected"
+    <div v-if="cellSelected"
          class="row mb-3 col-auto">
         <router-link :to="{ name: 'admin:employee:mail:profile', params: { id: cellParams['id'] } }">
             <button class="btn btn-primary"
@@ -28,11 +28,7 @@ export default defineComponent({
     setup() {
         const { getSearch, localEmployeeMail } = useAdminEmployeeMail();
 
-        const { filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, filterString } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -60,19 +56,15 @@ export default defineComponent({
             return localEmployeeMail.formArr;
         });
 
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
-            formArr,
-            selected
+            formArr
         };
     }
 });

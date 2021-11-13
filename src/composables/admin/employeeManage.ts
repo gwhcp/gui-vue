@@ -1,24 +1,43 @@
 import { client, usePageLoading } from "@/composables";
-import { reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseAdminEmployeeManageInterface {
     createAccount: (values: Record<string, unknown>) => Promise<void>;
     deleteAccount: (values: {
         id: string;
     }) => Promise<void>;
+    formArr: ComputedRef<string[]>;
+    formErrors: ComputedRef<Record<string, unknown>>;
+    formObj: ComputedRef<{
+        address: string;
+        city: string;
+        comment_order: string;
+        company: null | number;
+        country: string;
+        date_from: string;
+        email: string;
+        first_name: string;
+        id: number;
+        is_active: boolean;
+        is_staff: boolean;
+        last_login: null | string;
+        last_name: string;
+        password: string;
+        primary_phone: string;
+        secondary_phone: null | string;
+        state: string;
+        time_format: number;
+        time_zone: string;
+        zipcode: string;
+    }>;
+    formSuccess: ComputedRef<boolean>;
     getAccessLog: (id: string) => Promise<void>;
     getAccounts: () => Promise<void>;
     getPermissionsBase: () => Promise<void>;
     getPermissionsUser: (id: string) => Promise<void>;
     getProfile: (id: string) => Promise<void>;
-    localEmployeeManage: {
-        formArr: string[];
-        formErrors: Record<string, unknown>;
-        formObj: Record<string, unknown>;
-        formSuccess: boolean;
-        permissionsBase: string[];
-        permissionsUser: string[];
-    };
+    permissionsBase: ComputedRef<string[]>;
+    permissionsUser: ComputedRef<string[]>;
     updatePermissions: (id: string, values: string[]) => Promise<void>;
     updateProfile: (id: string, values: Record<string, unknown>) => Promise<void>;
 }
@@ -64,6 +83,22 @@ export const useAdminEmployeeManage = (): UseAdminEmployeeManageInterface => {
 
         return response.error;
     };
+
+    const formArr = computed(() => {
+        return localEmployeeManage.formArr;
+    });
+
+    const formErrors = computed(() => {
+        return localEmployeeManage.formErrors;
+    });
+
+    const formObj = computed(() => {
+        return localEmployeeManage.formObj;
+    });
+
+    const formSuccess = computed(() => {
+        return localEmployeeManage.formSuccess;
+    });
 
     const getAccessLog = async (id: string) => {
         loadingState.isActive = true;
@@ -131,10 +166,39 @@ export const useAdminEmployeeManage = (): UseAdminEmployeeManageInterface => {
     const localEmployeeManage = reactive({
         formArr: [],
         formErrors: {},
-        formObj: {},
+        formObj: {
+            address: '',
+            city: '',
+            comment_order: '',
+            company: null,
+            country: '',
+            date_from: '',
+            email: '',
+            first_name: '',
+            id: 0,
+            is_active: false,
+            is_staff: false,
+            last_login: null,
+            last_name: '',
+            password: '',
+            primary_phone: '',
+            secondary_phone: null,
+            state: '',
+            time_format: 12,
+            time_zone: '',
+            zipcode: ''
+        },
         formSuccess: false,
         permissionsBase: [],
         permissionsUser: []
+    });
+
+    const permissionsBase = computed(() => {
+        return localEmployeeManage.permissionsBase;
+    });
+
+    const permissionsUser = computed(() => {
+        return localEmployeeManage.permissionsUser;
     });
 
     const updatePermissions = async (id: string, values: string[]) => {
@@ -182,12 +246,17 @@ export const useAdminEmployeeManage = (): UseAdminEmployeeManageInterface => {
     return {
         createAccount,
         deleteAccount,
+        formArr,
+        formErrors,
+        formObj,
+        formSuccess,
         getAccessLog,
         getAccounts,
         getPermissionsBase,
         getPermissionsUser,
         getProfile,
-        localEmployeeManage,
+        permissionsBase,
+        permissionsUser,
         updatePermissions,
         updateProfile
     };

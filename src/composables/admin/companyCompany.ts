@@ -1,19 +1,28 @@
 import { client, usePageLoading } from "@/composables";
-import { reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseAdminCompanyCompanyInterface {
     createCompany: (values: Record<string, unknown>) => Promise<void>;
     deleteCompany: (values: {
         id: string;
     }) => Promise<void>;
+    formArr: ComputedRef<string[]>;
+    formErrors: ComputedRef<Record<string, unknown>>;
+    formObj: ComputedRef<{
+        address: string;
+        city: string;
+        country: string;
+        date_from: string;
+        id: number;
+        name: string;
+        primary_phone: string;
+        secondary_phone: null | string;
+        state: string;
+        zipcode: string;
+    }>;
+    formSuccess: ComputedRef<boolean>;
     getProfile: (id: string) => Promise<void>;
     getSearch: () => Promise<void>;
-    localCompanyCompany: {
-        formArr: string[];
-        formErrors: Record<string, unknown>;
-        formObj: Record<string, unknown>;
-        formSuccess: boolean;
-    };
     updateProfile: (id: string, values: Record<string, unknown>) => Promise<void>;
 }
 
@@ -59,6 +68,22 @@ export const useAdminCompanyCompany = (): UseAdminCompanyCompanyInterface => {
         return response.error;
     };
 
+    const formArr = computed(() => {
+        return localCompanyCompany.formArr;
+    });
+
+    const formErrors = computed(() => {
+        return localCompanyCompany.formErrors;
+    });
+
+    const formObj = computed(() => {
+        return localCompanyCompany.formObj;
+    });
+
+    const formSuccess = computed(() => {
+        return localCompanyCompany.formSuccess;
+    });
+
     const getProfile = async (id: string) => {
         loadingState.isActive = true;
 
@@ -82,7 +107,18 @@ export const useAdminCompanyCompany = (): UseAdminCompanyCompanyInterface => {
     const localCompanyCompany = reactive({
         formArr: [],
         formErrors: {},
-        formObj: {},
+        formObj: {
+            address: '',
+            city: '',
+            country: '',
+            date_from: '',
+            id: 0,
+            name: '',
+            primary_phone: '',
+            secondary_phone: null,
+            state: '',
+            zipcode: ''
+        },
         formSuccess: false
     });
 
@@ -106,9 +142,12 @@ export const useAdminCompanyCompany = (): UseAdminCompanyCompanyInterface => {
     return {
         createCompany,
         deleteCompany,
+        formArr,
+        formErrors,
+        formObj,
+        formSuccess,
         getProfile,
         getSearch,
-        localCompanyCompany,
         updateProfile
     };
 };

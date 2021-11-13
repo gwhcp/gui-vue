@@ -39,7 +39,7 @@
 import { InputSelect } from "@/components"
 import { useAdminBillingPayment } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted, reactive, ref } from "vue";
+import { defineComponent, onMounted, reactive, ref } from "vue";
 import { number, object, string } from "yup";
 
 export default defineComponent({
@@ -49,32 +49,23 @@ export default defineComponent({
         InputSelect
     },
     setup() {
-        const { createPaymentGateway, getChoices, localBillingPayment } = useAdminBillingPayment();
-
-        const choices = computed(() => {
-            return localBillingPayment.choices;
-        });
-
-        const formErrors = computed(() => {
-            return localBillingPayment.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localBillingPayment.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localBillingPayment.formSuccess;
-        });
+        const {
+            choices,
+            createPaymentGateway,
+            formErrors,
+            formObj,
+            formSuccess,
+            getChoices
+        } = useAdminBillingPayment();
 
         const method = ref(false);
 
         const methods: any = reactive({});
 
         const schema = object({
+            company: number().required().positive().integer(),
             merchant: string().required(),
-            payment_method: string().required(),
-            company: number().required().positive().integer()
+            payment_method: string().required()
         });
 
         onMounted(() => {

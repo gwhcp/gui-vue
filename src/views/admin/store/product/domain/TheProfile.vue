@@ -57,9 +57,9 @@
 
 <script lang="ts">
 import { InputSwitch, StaticData } from "@/components";
-import { useAuth, useAdminStoreProductDomain } from "@/composables";
+import { useAdminStoreProductDomain, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { boolean, object } from "yup";
 
@@ -71,23 +71,11 @@ export default defineComponent({
         StaticData
     },
     setup() {
+        const { formErrors, formObj, formSuccess, getProfile, updateProfile } = useAdminStoreProductDomain();
+
         const { hasPerm, hasPermForm } = useAuth();
 
-        const { getProfile, localStoreProductDomain, updateProfile } = useAdminStoreProductDomain();
-
         const route = useRoute();
-
-        const formErrors = computed(() => {
-            return localStoreProductDomain.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localStoreProductDomain.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localStoreProductDomain.formSuccess;
-        });
 
         const productId = route.params.id.toString();
 
@@ -98,7 +86,7 @@ export default defineComponent({
         onMounted(() => {
             getProfile(productId);
 
-            hasPermForm('store_product.change_storeproduct');
+            hasPermForm('admin_store_product.change_storeproduct');
         });
 
         return {

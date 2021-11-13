@@ -1,25 +1,40 @@
 import { client, usePageLoading } from "@/composables";
-import { reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseAdminCompanyDomainInterface {
+    choices: ComputedRef<Record<string, string>>;
     createDomain: (values: Record<string, unknown>) => Promise<void>;
     deleteDomain: (values: {
         id: string;
     }) => Promise<void>;
+    formArr: ComputedRef<string[]>;
+    formErrors: ComputedRef<Record<string, unknown>>;
+    formObj: ComputedRef<{
+        account: null | number;
+        company: number;
+        company_name: string;
+        date_from: string;
+        id: number;
+        in_queue: boolean;
+        ipaddress_pool: null | number;
+        is_active: boolean;
+        manage_dns: boolean;
+        name: string;
+        ns: string[];
+        related_to: null | number;
+    }>;
+    formSuccess: ComputedRef<boolean>;
     getChoices: () => Promise<void>;
     getProfile: (id: string) => Promise<void>;
     getSearch: () => Promise<void>;
-    localCompanyDomain: {
-        choices: Record<string, unknown>;
-        formArr: string[];
-        formErrors: Record<string, unknown>;
-        formObj: Record<string, unknown>;
-        formSuccess: boolean;
-    };
 }
 
 export const useAdminCompanyDomain = (): UseAdminCompanyDomainInterface => {
     const { loadingState } = usePageLoading();
+
+    const choices = computed(() => {
+        return localCompanyDomain.choices;
+    });
 
     const createDomain = async (values: Record<string, unknown>) => {
         loadingState.isActive = true;
@@ -60,6 +75,22 @@ export const useAdminCompanyDomain = (): UseAdminCompanyDomainInterface => {
         return response.error;
     };
 
+    const formArr = computed(() => {
+        return localCompanyDomain.formArr;
+    });
+
+    const formErrors = computed(() => {
+        return localCompanyDomain.formErrors;
+    });
+
+    const formObj = computed(() => {
+        return localCompanyDomain.formObj;
+    });
+
+    const formSuccess = computed(() => {
+        return localCompanyDomain.formSuccess;
+    });
+
     const getChoices = async () => {
         localCompanyDomain.choices = await client.get(
             'admin/company/domain/choices'
@@ -90,16 +121,33 @@ export const useAdminCompanyDomain = (): UseAdminCompanyDomainInterface => {
         choices: {},
         formArr: [],
         formErrors: {},
-        formObj: {},
+        formObj: {
+            account: 0,
+            company: 0,
+            company_name: '',
+            date_from: '',
+            id: 0,
+            in_queue: false,
+            ipaddress_pool: null,
+            is_active: false,
+            manage_dns: false,
+            name: '',
+            ns: [],
+            related_to: null
+        },
         formSuccess: false
     });
 
     return {
+        choices,
         createDomain,
         deleteDomain,
+        formArr,
+        formErrors,
+        formObj,
+        formSuccess,
         getChoices,
         getProfile,
-        getSearch,
-        localCompanyDomain
+        getSearch
     };
 };

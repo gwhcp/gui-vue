@@ -76,11 +76,7 @@ export default defineComponent({
 
         const route = useRoute();
 
-        const { cellQueueType, filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellQueueType, filterString } = useSearchGrid();
 
         const columnDefs = [
             {

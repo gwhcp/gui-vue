@@ -12,7 +12,7 @@
 <script lang="ts">
 import { useSearchGrid } from "@/composables";
 import { AgGridVue } from "ag-grid-vue3";
-import { defineComponent } from "vue";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "SearchGrid",
@@ -30,7 +30,7 @@ export default defineComponent({
         AgGridVue
     },
     setup() {
-        const { globalGrid } = useSearchGrid();
+        const { selectionClear, selectionUpdate } = useSearchGrid();
 
         const defaultColDef = {
             editable: false,
@@ -44,10 +44,15 @@ export default defineComponent({
             paginationPageSize: 20
         };
 
+        onMounted(() => {
+            selectionClear();
+        });
+
         return {
             defaultColDef,
-            globalGrid,
-            gridOptions
+            gridOptions,
+            selectionClear,
+            selectionUpdate
         }
     },
     created() {
@@ -56,25 +61,12 @@ export default defineComponent({
     mounted() {
         this.resizeColumns();
     },
-    watch: {
-        formArr: function () {
-            this.globalGrid.selected = false;
-        }
-    },
     methods: {
         onSelectionChanged() {
             // @ts-ignore
             const selectedRows = this.gridOptions.api.getSelectedRows();
 
-            if (selectedRows.length === 1) {
-                this.globalGrid.selected = true;
-
-                this.globalGrid.cellParams = selectedRows[0];
-            } else {
-                this.globalGrid.cellParams = '';
-
-                this.globalGrid.selected = false;
-            }
+            this.selectionUpdate(selectedRows);
         },
         resizeColumns() {
             // @ts-ignore

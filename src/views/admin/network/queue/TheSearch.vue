@@ -1,5 +1,5 @@
 <template>
-    <div v-if="selected"
+    <div v-if="cellSelected"
          class="row mb-3 col-auto">
         <router-link :to="{ name: 'admin:network:queue:profile', params: { id: cellParams['queue_status']['id'] } }">
             <button class="btn btn-primary"
@@ -28,11 +28,7 @@ export default defineComponent({
     setup() {
         const { getSearch, localNetworkQueue } = useAdminNetworkQueue();
 
-        const { cellQueueType, filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, cellQueueType, filterString } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -70,19 +66,15 @@ export default defineComponent({
             return localNetworkQueue.formArr;
         });
 
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
-            formArr,
-            selected
+            formArr
         };
     }
 });

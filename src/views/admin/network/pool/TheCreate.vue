@@ -40,7 +40,7 @@
 import { InputSelect, InputText } from "@/components";
 import { useAdminNetworkPool } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { number, object, string } from "yup";
 
 export default defineComponent({
@@ -51,29 +51,13 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { createPool, getChoices, localNetworkPool } = useAdminNetworkPool();
-
-        const choices = computed(() => {
-            return localNetworkPool.choices;
-        });
-
-        const formErrors = computed(() => {
-            return localNetworkPool.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localNetworkPool.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localNetworkPool.formSuccess;
-        });
+        const { choices, createPool, formErrors, formObj, formSuccess, getChoices } = useAdminNetworkPool();
 
         const schema = object({
+            assigned: string().required(),
             name: string().required(),
             network: string().required(),
-            subnet: number().required().positive().integer(),
-            assigned: string().required()
+            subnet: number().required().positive().integer()
         });
 
         onMounted(() => {

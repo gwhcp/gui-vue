@@ -82,7 +82,7 @@
                         <h4 class="mb-3">Choose a payment method:</h4>
 
                         <div class="list-group list-group-checkable">
-                            <div v-for="item in billing_profiles"
+                            <div v-for="item in billingProfiles"
                                  :key="item">
                                 <input-radio-list v-model="formObj.billing_profile"
                                                   :checked=false
@@ -114,7 +114,7 @@
 import { InputRadioList } from "@/components";
 import { useClientBilling, useClientStore } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { object, string } from "yup";
 
@@ -125,9 +125,18 @@ export default defineComponent({
         InputRadioList
     },
     setup() {
-        const { getSearch, localClientBilling } = useClientBilling();
+        const { formArr: billingProfiles, getSearch } = useClientBilling();
 
-        const { createOrder, getProductPrices, localClientStore } = useClientStore();
+        const {
+            createOrder,
+            formArr,
+            formErrors,
+            formObj,
+            formSuccess,
+            getProductPrices,
+            nonFieldFormError,
+            nonFieldFormMessage
+        } = useClientStore();
 
         const cartPrice = ref({
             'base': '0.00',
@@ -137,34 +146,6 @@ export default defineComponent({
         });
 
         const route = useRoute();
-
-        const billing_profiles = computed(() => {
-            return localClientBilling.formArr;
-        });
-
-        const formArr = computed(() => {
-            return localClientStore.formArr;
-        });
-
-        const formErrors = computed(() => {
-            return localClientStore.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localClientStore.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localClientStore.formSuccess;
-        });
-
-        const nonFieldFormError = computed(() => {
-            return localClientStore.nonFieldFormError;
-        });
-
-        const nonFieldFormMessage = computed(() => {
-            return localClientStore.nonFieldFormMessage;
-        });
 
         const productId = route.params.id.toString();
 
@@ -180,7 +161,7 @@ export default defineComponent({
         });
 
         return {
-            billing_profiles,
+            billingProfiles,
             cartPrice,
             createOrder,
             formArr,

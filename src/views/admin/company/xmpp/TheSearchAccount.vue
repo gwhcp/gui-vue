@@ -22,7 +22,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'admin:company:xmpp:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -34,7 +34,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('admin_company_xmpp.delete_prosodyaccount')"
+        <div v-if="cellSelected && hasPerm('admin_company_xmpp.delete_prosodyaccount')"
              class="col-auto">
             <modal-open-delete :delete="deleteAccount"
                                :form-arr="formArr"
@@ -64,11 +64,7 @@ export default defineComponent({
 
         const { deleteAccount, getSearchAccount, localCompanyXmpp } = useAdminCompanyXmpp();
 
-        const { filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, filterString } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -102,21 +98,17 @@ export default defineComponent({
             return localCompanyXmpp.formArr;
         });
 
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearchAccount();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deleteAccount,
             formArr,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

@@ -25,7 +25,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('admin_company_dns.delete_dnszone')"
+        <div v-if="cellSelected && hasPerm('admin_company_dns.delete_dnszone')"
              class="col-auto">
             <modal-open-delete :delete="deleteRecord"
                                :form-arr="formArr"
@@ -42,8 +42,8 @@
 
 <script lang="ts">
 import { ModalOpenDelete, SearchGrid } from "@/components";
-import { useAuth, useAdminCompanyDns, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { useAdminCompanyDns, useAuth, useSearchGrid } from "@/composables";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -53,19 +53,15 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
+        const { deleteRecord, formArr, getSearchRecord } = useAdminCompanyDns();
+
         const { hasPerm } = useAuth();
 
-        const { deleteRecord, getSearchRecord, localCompanyDns } = useAdminCompanyDns();
-
-        const { filterDnsResults, filterString, globalGrid } = useSearchGrid();
+        const { cellParams, cellSelected, filterDnsResults, filterString } = useSearchGrid();
 
         const route = useRoute();
 
         const domainId = route.params.id.toString();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
 
         const columnDefs = [
             {
@@ -92,27 +88,19 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localCompanyDns.formArr;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearchRecord(domainId);
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deleteRecord,
             domainId,
             filterDnsResults,
             formArr,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

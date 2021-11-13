@@ -12,7 +12,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'admin:company:mail:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -24,7 +24,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('admin_company_mail.delete_mail')"
+        <div v-if="cellSelected && hasPerm('admin_company_mail.delete_mail')"
              class="col-auto">
             <modal-open-delete :delete="deleteMail"
                                :form-arr="formArr"
@@ -54,11 +54,7 @@ export default defineComponent({
 
         const { deleteMail, getSearch, localCompanyMail } = useAdminCompanyMail();
 
-        const { filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, filterString } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -86,21 +82,17 @@ export default defineComponent({
             return localCompanyMail.formArr;
         });
 
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deleteMail,
             formArr,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

@@ -59,7 +59,7 @@
 import { InputSelect, InputSwitch, InputText } from "@/components";
 import { useAdminStoreProduct, useAdminStoreProductDomain } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { boolean, number, object, string } from "yup";
 
 export default defineComponent({
@@ -71,34 +71,18 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { getChoices, localStoreProduct } = useAdminStoreProduct();
+        const { choices, getChoices } = useAdminStoreProduct();
 
-        const { createProduct, localStoreProductDomain } = useAdminStoreProductDomain();
-
-        const choices = computed(() => {
-            return localStoreProduct.choices;
-        });
-
-        const formErrors = computed(() => {
-            return localStoreProductDomain.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localStoreProductDomain.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localStoreProductDomain.formSuccess;
-        });
+        const { createProduct, formErrors, formObj, formSuccess } = useAdminStoreProductDomain();
 
         const schema = object({
             company: number().required(),
-            name: string().required(),
             has_cron: boolean(),
             has_mail: boolean(),
             has_mysql: boolean(),
             has_postgresql: boolean(),
             ipaddress_type: string().required(),
+            name: string().required(),
             web_type: string().required()
         });
 

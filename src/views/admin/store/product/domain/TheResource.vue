@@ -120,9 +120,9 @@
 
 <script lang="ts">
 import { InputText } from "@/components";
-import { useAuth, useAdminStoreProductDomain } from "@/composables";
+import { useAdminStoreProductDomain, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { number, object } from "yup";
 
@@ -133,46 +133,34 @@ export default defineComponent({
         InputText
     },
     setup() {
+        const { formErrors, formObj, formSuccess, getResource, updateResource } = useAdminStoreProductDomain();
+
         const { hasPerm, hasPermForm } = useAuth();
 
-        const { getResource, localStoreProductDomain, updateResource } = useAdminStoreProductDomain();
-
         const route = useRoute();
-
-        const formErrors = computed(() => {
-            return localStoreProductDomain.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localStoreProductDomain.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localStoreProductDomain.formSuccess;
-        });
 
         const productId = route.params.id.toString();
 
         const schema = object({
             bandwidth: number().required().integer(),
+            cron_tab: number().required().integer(),
             diskspace: number().required().integer(),
             domain: number().required().integer(),
-            sub_domain: number().required().integer(),
             ftp_user: number().required().integer(),
-            cron_tab: number().required().integer(),
             ipaddress: number().required().integer(),
             mail_account: number().required().integer(),
             mail_list: number().required().integer(),
             mysql_database: number().required().integer(),
             mysql_user: number().required().integer(),
             postgresql_database: number().required().integer(),
-            postgresql_user: number().required().integer()
+            postgresql_user: number().required().integer(),
+            sub_domain: number().required().integer()
         });
 
         onMounted(() => {
             getResource(productId);
 
-            hasPermForm('store_product.change_storeproduct');
+            hasPermForm('admin_store_product.change_storeproduct');
         });
 
         return {

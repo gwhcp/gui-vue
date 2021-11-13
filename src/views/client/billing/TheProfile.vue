@@ -109,7 +109,7 @@
 import { InputSelectCountry, InputSelectState, InputText, StaticData } from "@/components";
 import { useAuth, useClientBilling } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { number, object, string } from "yup";
 
@@ -125,43 +125,31 @@ export default defineComponent({
     setup() {
         const { hasPermForm } = useAuth();
 
-        const { getProfile, localClientBilling, updateProfile } = useClientBilling();
+        const {
+            formErrors,
+            formObj,
+            formSuccess,
+            nonFieldFormError,
+            nonFieldFormMessage,
+            getProfile,
+            updateProfile
+        } = useClientBilling();
 
         const route = useRoute();
 
         const profileId = route.params.id.toString();
 
-        const formErrors = computed(() => {
-            return localClientBilling.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localClientBilling.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localClientBilling.formSuccess;
-        });
-
-        const nonFieldFormError = computed(() => {
-            return localClientBilling.nonFieldFormError;
-        });
-
-        const nonFieldFormMessage = computed(() => {
-            return localClientBilling.nonFieldFormMessage;
-        });
-
         const schema = object({
-            name: string().required(),
             address: string().required(),
             city: string().required(),
             country: string().required(),
-            state: string().required(),
-            zipcode: string().required(),
-            primary_phone: number().required().positive().integer(),
+            credit_card_cvv2: string().required().min(3).max(4),
             credit_card_month: string().required().length(2),
             credit_card_year: string().required().length(4),
-            credit_card_cvv2: string().required().min(3).max(4)
+            name: string().required(),
+            primary_phone: number().required().positive().integer(),
+            state: string().required(),
+            zipcode: string().required()
         });
 
         onMounted(() => {

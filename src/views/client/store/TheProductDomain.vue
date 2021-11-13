@@ -193,16 +193,12 @@
 
 <script lang="ts">
 import { useClientStore } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheProductDomain",
     setup() {
-        const { getProductDomain, localClientStore } = useClientStore();
-
-        const formArr = computed(() => {
-            return localClientStore.formArr;
-        });
+        const { formArr, getProductDomain } = useClientStore();
 
         onMounted(() => {
             getProductDomain();

@@ -1,20 +1,39 @@
 import { client, usePageLoading } from "@/composables";
-import { reactive } from "vue";
-import { client as createClient, session as createSession } from "@/composables/client/create";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseClientAccountInterface {
+    choices: ComputedRef<{
+        comment: Record<string, string>;
+        timeformat: Record<string, string>;
+        timezone: Record<string, string>;
+    }>;
     createAccount: (values: Record<string, unknown>) => Promise<void>;
+    formArr: ComputedRef<string[]>;
+    formErrors: ComputedRef<Record<string, unknown>>;
+    formObj: ComputedRef<{
+        address: string;
+        city: string;
+        comment_order: string;
+        confirmed_password: string;
+        country: string;
+        date_from: string;
+        email: string;
+        first_name: string;
+        id: number;
+        last_name: string;
+        old_password: string;
+        password: string;
+        primary_phone: string;
+        secondary_phone: null | string;
+        state: string;
+        time_format: number;
+        time_zone: string;
+        zipcode: string;
+    }>;
+    formSuccess: ComputedRef<boolean>;
     getAccessLog: () => Promise<void>;
     getChoices: () => Promise<void>;
     getProfile: () => Promise<void>;
-    initialize: () => void;
-    localClientAccount: {
-        choices: Record<string, unknown>;
-        formArr: string[];
-        formErrors: Record<string, unknown>;
-        formObj: Record<string, unknown>;
-        formSuccess: boolean;
-    };
     updatePassword: (values: Record<string, unknown>) => Promise<void>;
     updateProfile: (values: Record<string, unknown>) => Promise<void>;
 }
@@ -22,12 +41,14 @@ interface UseClientAccountInterface {
 export const useClientAccount = (): UseClientAccountInterface => {
     const { loadingState } = usePageLoading();
 
+    const choices = computed(() => {
+        return localClientAccount.choices;
+    });
+
     const createAccount = async (values: Record<string, unknown>) => {
         loadingState.isActive = true;
 
-        initialize();
-
-        const response = await createClient.post(
+        const response = await client.post(
             'client/account/create',
             values
         );
@@ -40,6 +61,22 @@ export const useClientAccount = (): UseClientAccountInterface => {
 
         loadingState.isActive = false;
     };
+
+    const formArr = computed(() => {
+        return localClientAccount.formArr;
+    });
+
+    const formErrors = computed(() => {
+        return localClientAccount.formErrors;
+    });
+
+    const formObj = computed(() => {
+        return localClientAccount.formObj;
+    });
+
+    const formSuccess = computed(() => {
+        return localClientAccount.formSuccess;
+    });
 
     const getAccessLog = async () => {
         loadingState.isActive = true;
@@ -67,19 +104,34 @@ export const useClientAccount = (): UseClientAccountInterface => {
         loadingState.isActive = false;
     };
 
-    const initialize = () => {
-        const token = process.env.VUE_APP_API_KEY;
-
-        if (token) {
-            createSession.defaults.headers.common['Authorization'] = `Token ${token}`;
-        }
-    };
-
     const localClientAccount = reactive({
-        choices: {},
+        choices: {
+            comment: {},
+            timeformat: {},
+            timezone: {}
+        },
         formArr: [],
         formErrors: {},
-        formObj: {},
+        formObj: {
+            address: '',
+            city: '',
+            comment_order: '',
+            confirmed_password: '',
+            country: '',
+            date_from: '',
+            email: '',
+            first_name: '',
+            id: 0,
+            last_name: '',
+            old_password: '',
+            password: '',
+            primary_phone: '',
+            secondary_phone: null,
+            state: '',
+            time_format: 12,
+            time_zone: '',
+            zipcode: ''
+        },
         formSuccess: false
     });
 
@@ -118,12 +170,15 @@ export const useClientAccount = (): UseClientAccountInterface => {
     };
 
     return {
+        choices,
         createAccount,
+        formArr,
+        formErrors,
+        formObj,
+        formSuccess,
         getAccessLog,
         getChoices,
         getProfile,
-        initialize,
-        localClientAccount,
         updatePassword,
         updateProfile
     };

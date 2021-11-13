@@ -61,9 +61,9 @@
 
 <script lang="ts">
 import { InputSelect, InputSwitch, InputText, StaticData } from "@/components";
-import { useAuth, useAdminNetworkPool } from "@/composables";
+import { useAdminNetworkPool, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { boolean, object, string } from "yup";
 
@@ -77,32 +77,24 @@ export default defineComponent({
         StaticData
     },
     setup() {
-        const { hasPermForm } = useAuth();
+        const {
+            choices,
+            formErrors,
+            formObj,
+            formSuccess,
+            getChoices,
+            getProfile,
+            updateProfile
+        } = useAdminNetworkPool();
 
-        const { getChoices, getProfile, localNetworkPool, updateProfile } = useAdminNetworkPool();
+        const { hasPermForm } = useAuth();
 
         const route = useRoute();
 
-        const choices = computed(() => {
-            return localNetworkPool.choices;
-        });
-
-        const formErrors = computed(() => {
-            return localNetworkPool.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localNetworkPool.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localNetworkPool.formSuccess;
-        });
-
         const schema = object({
-            name: string().required(),
             assigned: string().required(),
-            is_active: boolean()
+            is_active: boolean(),
+            name: string().required()
         });
 
         const setupId = route.params.id.toString();

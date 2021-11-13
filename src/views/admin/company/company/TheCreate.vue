@@ -61,7 +61,7 @@
 import { InputSelectCountry, InputSelectState, InputText } from "@/components";
 import { useAdminCompanyCompany } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent } from "vue";
+import { defineComponent } from "vue";
 import { number, object, string } from "yup";
 
 export default defineComponent({
@@ -73,29 +73,17 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { createCompany, localCompanyCompany } = useAdminCompanyCompany();
-
-        const formErrors = computed(() => {
-            return localCompanyCompany.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localCompanyCompany.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localCompanyCompany.formSuccess;
-        });
+        const { createCompany, formErrors, formObj, formSuccess } = useAdminCompanyCompany();
 
         const schema = object({
-            name: string().required(),
             address: string().required(),
             city: string().required(),
             country: string().required(),
-            state: string().required(),
-            zipcode: string().required(),
+            name: string().required(),
             primary_phone: number().required().positive().integer(),
-            secondary_phone: number().positive().integer().nullable()
+            secondary_phone: number().positive().integer().nullable(),
+            state: string().required(),
+            zipcode: string().required()
         });
 
         return {

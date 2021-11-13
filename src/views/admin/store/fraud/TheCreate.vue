@@ -30,7 +30,7 @@
 import { InputSelect, InputText } from "@/components";
 import { useAdminStoreFraud } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { object, string } from "yup";
 
 export default defineComponent({
@@ -41,27 +41,11 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { createFraudString, getChoices, localStoreFraud } = useAdminStoreFraud();
-
-        const choices = computed(() => {
-            return localStoreFraud.choices;
-        });
-
-        const formErrors = computed(() => {
-            return localStoreFraud.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localStoreFraud.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localStoreFraud.formSuccess;
-        });
+        const { choices, createFraudString, formErrors, formObj, formSuccess, getChoices } = useAdminStoreFraud();
 
         const schema = object({
-            name: string().required(),
-            fraud_type: string().required()
+            fraud_type: string().required(),
+            name: string().required()
         });
 
         onMounted(() => {

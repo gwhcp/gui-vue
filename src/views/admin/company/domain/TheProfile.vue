@@ -23,8 +23,8 @@
 
 <script lang="ts">
 import { StaticData } from "@/components";
-import { useAdminCompanyDns } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { useAdminCompanyDomain } from "@/composables";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -33,15 +33,11 @@ export default defineComponent({
         StaticData
     },
     setup() {
-        const { getProfile, localCompanyDns } = useAdminCompanyDns();
+        const { formObj, getProfile } = useAdminCompanyDomain();
 
         const route = useRoute();
 
         const domainId = route.params.id.toString();
-
-        const formObj = computed(() => {
-            return localCompanyDns.formObj;
-        });
 
         onMounted(() => {
             getProfile(domainId);

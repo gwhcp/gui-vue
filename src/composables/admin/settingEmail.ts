@@ -1,26 +1,36 @@
 import { client, usePageLoading } from "@/composables";
-import { reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseAdminSettingEmailInterface {
+    choices: ComputedRef<Record<string, string>>;
     createEmailTemplate: (values: Record<string, unknown>) => Promise<void>;
     deleteEmailTemplate: (values: {
         id: string;
     }) => Promise<void>;
+    formArr: ComputedRef<string[]>;
+    formErrors: ComputedRef<Record<string, unknown>>;
+    formObj: ComputedRef<{
+        body: string;
+        date_from: string;
+        id: number;
+        sender: string;
+        subject: string;
+        template: string;
+        template_name: string;
+    }>;
+    formSuccess: ComputedRef<boolean>;
     getChoices: () => Promise<void>;
     getProfile: (id: string) => Promise<void>;
     getSearch: () => Promise<void>;
-    localSettingEmail: {
-        choices: Record<string, unknown>;
-        formArr: string[];
-        formErrors: Record<string, unknown>;
-        formObj: Record<string, unknown>;
-        formSuccess: boolean;
-    };
     updateProfile: (id: string, values: Record<string, unknown>) => Promise<void>;
 }
 
 export const useAdminSettingEmail = (): UseAdminSettingEmailInterface => {
     const { loadingState } = usePageLoading();
+
+    const choices = computed(() => {
+        return localSettingEmail.choices;
+    });
 
     const createEmailTemplate = async (values: Record<string, unknown>) => {
         loadingState.isActive = true;
@@ -61,6 +71,22 @@ export const useAdminSettingEmail = (): UseAdminSettingEmailInterface => {
         return response.error;
     };
 
+    const formArr = computed(() => {
+        return localSettingEmail.formArr;
+    });
+
+    const formErrors = computed(() => {
+        return localSettingEmail.formErrors;
+    });
+
+    const formObj = computed(() => {
+        return localSettingEmail.formObj;
+    });
+
+    const formSuccess = computed(() => {
+        return localSettingEmail.formSuccess;
+    });
+
     const getChoices = async () => {
         localSettingEmail.choices = await client.get(
             'admin/setting/email/choices'
@@ -91,7 +117,15 @@ export const useAdminSettingEmail = (): UseAdminSettingEmailInterface => {
         choices: {},
         formArr: [],
         formErrors: {},
-        formObj: {},
+        formObj: {
+            body: '',
+            date_from: '',
+            id: 0,
+            sender: '',
+            subject: '',
+            template: '',
+            template_name: ''
+        },
         formSuccess: false
     });
 
@@ -113,12 +147,16 @@ export const useAdminSettingEmail = (): UseAdminSettingEmailInterface => {
     };
 
     return {
+        choices,
         createEmailTemplate,
         deleteEmailTemplate,
+        formArr,
+        formErrors,
+        formObj,
+        formSuccess,
         getChoices,
         getProfile,
         getSearch,
-        localSettingEmail,
         updateProfile
     };
 };

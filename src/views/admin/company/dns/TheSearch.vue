@@ -1,6 +1,6 @@
 <template>
     <div class="row mb-3">
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'admin:company:dns:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -20,7 +20,7 @@
 <script lang="ts">
 import { SearchGrid } from "@/components";
 import { useAdminCompanyDns, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheSearch",
@@ -28,13 +28,9 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
-        const { getSearch, localCompanyDns } = useAdminCompanyDns();
+        const { formArr, getSearch } = useAdminCompanyDns();
 
-        const { filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, filterString } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -52,23 +48,15 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localCompanyDns.formArr;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
-            formArr,
-            selected
+            formArr
         };
     }
 });

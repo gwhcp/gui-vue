@@ -30,7 +30,7 @@
 import { InputSelect, InputText } from "@/components";
 import { useAdminSettingBanned } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { object, string } from "yup";
 
 export default defineComponent({
@@ -41,27 +41,11 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { createBanned, getChoices, localSettingBanned } = useAdminSettingBanned();
-
-        const choices = computed(() => {
-            return localSettingBanned.choices;
-        });
-
-        const formErrors = computed(() => {
-            return localSettingBanned.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localSettingBanned.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localSettingBanned.formSuccess;
-        });
+        const { choices, createBanned, formErrors, formObj, formSuccess, getChoices } = useAdminSettingBanned();
 
         const schema = object({
-            name: string().required(),
-            banned_type: string().required()
+            banned_type: string().required(),
+            name: string().required()
         });
 
         onMounted(() => {

@@ -36,7 +36,7 @@
 import { InputSelect, InputText } from "@/components";
 import { useAdminHardwareCompany } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { object, string } from "yup";
 
 export default defineComponent({
@@ -47,23 +47,7 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { createHardware, getChoices, localHardwareCompany } = useAdminHardwareCompany();
-
-        const choices = computed(() => {
-            return localHardwareCompany.choices;
-        });
-
-        const formErrors = computed(() => {
-            return localHardwareCompany.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localHardwareCompany.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localHardwareCompany.formSuccess;
-        });
+        const { choices, createHardware, formErrors, formObj, formSuccess, getChoices } = useAdminHardwareCompany();
 
         const schema = object({
             domain: string().required(),

@@ -44,9 +44,9 @@
 </template>
 
 <script lang="ts">
-import { useAuth, useAdminEmployeeManage } from "@/composables";
+import { useAdminEmployeeManage, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import VueMultiselect from "vue-multiselect";
 import { useRoute } from "vue-router";
 
@@ -57,25 +57,20 @@ export default defineComponent({
         VueMultiselect
     },
     setup() {
-        const { hasPermForm } = useAuth();
+        const {
+            formSuccess,
+            getPermissionsBase,
+            getPermissionsUser,
+            permissionsBase,
+            permissionsUser,
+            updatePermissions
+        } = useAdminEmployeeManage();
 
-        const { getPermissionsBase, getPermissionsUser, localEmployeeManage, updatePermissions } = useAdminEmployeeManage();
+        const { hasPermForm } = useAuth();
 
         const route = useRoute();
 
         const accountId = route.params.id.toString();
-
-        const formSuccess = computed(() => {
-            return localEmployeeManage.formSuccess;
-        });
-
-        const permissionsBase = computed(() => {
-            return localEmployeeManage.permissionsBase;
-        });
-
-        const permissionsUser = computed(() => {
-            return localEmployeeManage.permissionsUser;
-        });
 
         const selected: any = ref([]);
 

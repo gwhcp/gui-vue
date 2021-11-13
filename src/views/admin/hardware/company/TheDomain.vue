@@ -40,9 +40,9 @@
 </template>
 
 <script lang="ts">
-import { useAuth, useAdminHardwareCompany } from "@/composables";
+import { useAdminHardwareCompany, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import VueMultiselect from "vue-multiselect";
 import { useRoute } from "vue-router";
 import { boolean, object } from "yup";
@@ -54,19 +54,11 @@ export default defineComponent({
         VueMultiselect
     },
     setup() {
+        const { domainsBase, formSuccess, getBaseDomain, getDomain, updateDomain } = useAdminHardwareCompany();
+
         const { hasPermForm } = useAuth();
 
-        const { getBaseDomain, getDomain, localHardwareCompany, updateDomain } = useAdminHardwareCompany();
-
         const route = useRoute();
-
-        const domainsBase = computed(() => {
-            return localHardwareCompany.domainsBase;
-        });
-
-        const formSuccess = computed(() => {
-            return localHardwareCompany.formSuccess;
-        });
 
         const schema = object({
             is_active: boolean()

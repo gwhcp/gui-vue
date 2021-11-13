@@ -12,7 +12,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'admin:billing:reason:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -24,12 +24,12 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('admin_billing_reason.delete_reason')"
+        <div v-if="cellSelected && hasPerm('admin_billing_reason.delete_reason')"
              class="col-auto">
             <modal-open-delete :delete="deleteReason"
                                :form-arr="formArr"
                                :message-error="formErrors"
-                               :params="{ id: cellParams.id }"
+                               :params="{ id: cellParams['id'] }"
                                message-alert="Continuing will remove this reason."
                                message-success="Reason has been removed."/>
         </div>
@@ -41,8 +41,8 @@
 
 <script lang="ts">
 import { ModalOpenDelete, SearchGrid } from "@/components"
-import { useAuth, useAdminBillingReason, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { useAdminBillingReason, useAuth, useSearchGrid } from "@/composables";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheSearch",
@@ -53,13 +53,9 @@ export default defineComponent({
     setup() {
         const { hasPerm } = useAuth();
 
-        const { deleteReason, getSearch, localBillingReason } = useAdminBillingReason();
+        const { deleteReason, formArr, formErrors, getSearch } = useAdminBillingReason();
 
-        const { filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, filterString } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -83,30 +79,18 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localBillingReason.formArr;
-        });
-
-        const formErrors = computed(() => {
-            return localBillingReason.formErrors;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deleteReason,
             formArr,
             formErrors,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

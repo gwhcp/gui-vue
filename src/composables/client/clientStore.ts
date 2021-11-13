@@ -1,19 +1,24 @@
 import { client, usePageLoading } from "@/composables";
-import { reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseClientStoreInterface {
     createOrder: (values: Record<string, unknown>) => Promise<void>;
+    formArr: ComputedRef<string[]>;
+    formErrors: ComputedRef<Record<string, unknown>>;
+    formObj: ComputedRef<{
+        billing_profile: number;
+        domain: boolean;
+        mail: boolean;
+        mysql: boolean;
+        postgresql: boolean;
+        store_product_price: number;
+    }>;
+    formSuccess: ComputedRef<boolean>;
     getProductDomain: () => Promise<void>;
     getProductPrices: (productId: string) => Promise<void>;
     getProductTypes: () => Promise<void>;
-    localClientStore: {
-        formArr: string[];
-        formErrors: Record<string, unknown>;
-        formObj: Record<string, unknown>;
-        formSuccess: boolean;
-        nonFieldFormError: boolean;
-        nonFieldFormMessage: string;
-    };
+    nonFieldFormError: ComputedRef<boolean>;
+    nonFieldFormMessage: ComputedRef<string>;
 }
 
 export const useClientStore = (): UseClientStoreInterface => {
@@ -42,6 +47,22 @@ export const useClientStore = (): UseClientStoreInterface => {
 
         loadingState.isActive = false;
     };
+
+    const formArr = computed(() => {
+        return localClientStore.formArr;
+    });
+
+    const formErrors = computed(() => {
+        return localClientStore.formErrors;
+    });
+
+    const formObj = computed(() => {
+        return localClientStore.formObj;
+    });
+
+    const formSuccess = computed(() => {
+        return localClientStore.formSuccess;
+    });
 
     const getProductDomain = async () => {
         loadingState.isActive = true;
@@ -76,17 +97,37 @@ export const useClientStore = (): UseClientStoreInterface => {
     const localClientStore = reactive({
         formArr: [],
         formErrors: {},
-        formObj: {},
+        formObj: {
+            billing_profile: 0,
+            domain: false,
+            mail: false,
+            mysql: false,
+            postgresql: false,
+            store_product_price: 0,
+        },
         formSuccess: false,
         nonFieldFormError: false,
         nonFieldFormMessage: ''
     });
 
+    const nonFieldFormError = computed(() => {
+        return localClientStore.nonFieldFormError;
+    });
+
+    const nonFieldFormMessage = computed(() => {
+        return localClientStore.nonFieldFormMessage;
+    });
+
     return {
         createOrder,
+        formArr,
+        formErrors,
+        formObj,
+        formSuccess,
         getProductDomain,
         getProductPrices,
         getProductTypes,
-        localClientStore
+        nonFieldFormError,
+        nonFieldFormMessage
     };
 };

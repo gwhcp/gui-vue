@@ -12,7 +12,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'admin:billing:payment:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -24,7 +24,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('admin_billing_payment.delete_paymentgateway')"
+        <div v-if="cellSelected && hasPerm('admin_billing_payment.delete_paymentgateway')"
              class="col-auto">
             <modal-open-delete :delete="deletePaymentGateway"
                                :form-arr="formArr"
@@ -41,8 +41,8 @@
 
 <script lang="ts">
 import { ModalOpenDelete, SearchGrid } from "@/components"
-import { useAuth, useAdminBillingPayment, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { useAdminBillingPayment, useAuth, useSearchGrid } from "@/composables";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheSearch",
@@ -51,15 +51,11 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
+        const { deletePaymentGateway, formArr, formErrors, getSearch } = useAdminBillingPayment();
+
         const { hasPerm } = useAuth();
 
-        const { deletePaymentGateway, getSearch, localBillingPayment } = useAdminBillingPayment();
-
-        const { filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, filterString } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -89,30 +85,18 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localBillingPayment.formArr;
-        });
-
-        const formErrors = computed(() => {
-            return localBillingPayment.formErrors;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deletePaymentGateway,
             formArr,
             formErrors,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

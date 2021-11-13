@@ -1,6 +1,6 @@
 <template>
     <div class="row mb-3">
-        <div v-if="hasPerm('store_product.add_storeproduct')"
+        <div v-if="hasPerm('admin_store_product.add_storeproduct')"
              class="col-auto">
             <router-link :to="{ name: 'admin:store:product:domain:create' }">
                 <button class="btn btn-success"
@@ -12,7 +12,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'admin:store:product:domain:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -24,7 +24,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('store_product.delete_storeproduct')"
+        <div v-if="cellSelected && hasPerm('admin_store_product.delete_storeproduct')"
              class="col-auto">
             <modal-open-delete :delete="deleteProduct"
                                :form-arr="formArr"
@@ -40,8 +40,8 @@
 
 <script lang="ts">
 import { ModalOpenDelete, SearchGrid } from "@/components";
-import { useAuth, useSearchGrid, useAdminStoreProductDomain } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { useAdminStoreProductDomain, useAuth, useSearchGrid } from "@/composables";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheSearch",
@@ -50,15 +50,11 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
+        const { deleteProduct, formArr, formErrors, getSearch } = useAdminStoreProductDomain();
+
         const { hasPerm } = useAuth();
 
-        const { deleteProduct, getSearch, localStoreProductDomain } = useAdminStoreProductDomain();
-
-        const { cellStatus, filterString, formatStatus, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, cellStatus, filterString, formatStatus } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -96,30 +92,18 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localStoreProductDomain.formArr;
-        });
-
-        const formErrors = computed(() => {
-            return localStoreProductDomain.formErrors;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deleteProduct,
             formArr,
             formErrors,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

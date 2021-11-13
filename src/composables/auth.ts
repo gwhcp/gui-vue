@@ -1,7 +1,9 @@
 import { client, session, usePageLoading } from "@/composables";
-import { reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseAuthInterface {
+    formErrors: ComputedRef<string>;
+    formSuccess: ComputedRef<boolean>;
     getAccountProfile: () => {
         address: string;
         city: string;
@@ -29,16 +31,12 @@ interface UseAuthInterface {
     hasPerm: (permission: string) => boolean;
     hasPermForm: (permission: string) => void;
     initialize: () => void;
-    localAuth: {
-        formErrors: string;
-        formSuccess: boolean;
-        nonFieldFormError: boolean;
-        nonFieldFormMessage: string;
-    };
     login: (values: {
         email: string;
         password: string;
     }) => void;
+    nonFieldFormError: ComputedRef<boolean>;
+    nonFieldFormMessage: ComputedRef<string>;
     removeToken: () => void;
 }
 
@@ -54,6 +52,14 @@ const tokenStorageKey = 'TOKEN_STORAGE_KEY';
 
 export const useAuth = (): UseAuthInterface => {
     const { loadingState } = usePageLoading();
+
+    const formErrors = computed(() => {
+        return localAuth.formErrors;
+    });
+
+    const formSuccess = computed(() => {
+        return localAuth.formSuccess;
+    });
 
     const getAccountProfile = () => {
         return JSON.parse(globalAuth.accountProfile);
@@ -168,6 +174,14 @@ export const useAuth = (): UseAuthInterface => {
         loadingState.isActive = false;
     };
 
+    const nonFieldFormError = computed(() => {
+        return localAuth.nonFieldFormError;
+    });
+
+    const nonFieldFormMessage = computed(() => {
+        return localAuth.nonFieldFormMessage;
+    });
+
     const removeToken = async () => {
         localStorage.removeItem(tokenStorageKey);
 
@@ -184,13 +198,16 @@ export const useAuth = (): UseAuthInterface => {
     };
 
     return {
+        formErrors,
+        formSuccess,
         getAccountProfile,
         globalAuth,
         hasPerm,
         hasPermForm,
         initialize,
-        localAuth,
         login,
+        nonFieldFormError,
+        nonFieldFormMessage,
         removeToken
     };
 };

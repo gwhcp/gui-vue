@@ -21,7 +21,7 @@
 <script lang="ts">
 import { StaticData } from "@/components";
 import { useAdminBillingReason } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -30,13 +30,9 @@ export default defineComponent({
         StaticData
     },
     setup() {
-        const { getProfile, localBillingReason } = useAdminBillingReason();
+        const { formObj, getProfile } = useAdminBillingReason();
 
         const route = useRoute();
-
-        const formObj = computed(() => {
-            return localBillingReason.formObj;
-        });
 
         const reasonId = route.params.id.toString();
 

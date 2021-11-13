@@ -1,26 +1,42 @@
 import { client, usePageLoading } from "@/composables";
-import { reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseAdminNetworkPoolInterface {
+    choices: ComputedRef<Record<string, string>>;
     createPool: (values: Record<string, unknown>) => Promise<void>;
     deletePool: (values: {
         id: string;
     }) => Promise<void>;
+    formArr: ComputedRef<string[]>;
+    formErrors: ComputedRef<Record<string, unknown>>;
+    formObj: ComputedRef<{
+        assigned: string;
+        assigned_name: string;
+        broadcast: null | string;
+        date_from: string;
+        id: number;
+        ip_available: number;
+        ip_total: number;
+        ip_type: number;
+        is_active: boolean;
+        name: string;
+        netmask: null | string;
+        network: string;
+        subnet: number;
+    }>;
+    formSuccess: ComputedRef<boolean>;
     getChoices: () => Promise<void>;
     getProfile: (id: string) => Promise<void>;
     getSearch: () => Promise<void>;
-    localNetworkPool: {
-        choices: Record<string, unknown>;
-        formArr: string[];
-        formErrors: Record<string, unknown>;
-        formObj: Record<string, unknown>;
-        formSuccess: boolean;
-    };
     updateProfile: (id: string, values: Record<string, unknown>) => Promise<void>;
 }
 
 export const useAdminNetworkPool = (): UseAdminNetworkPoolInterface => {
     const { loadingState } = usePageLoading();
+
+    const choices = computed(() => {
+        return localNetworkPool.choices;
+    });
 
     const createPool = async (values: Record<string, unknown>) => {
         loadingState.isActive = true;
@@ -61,6 +77,22 @@ export const useAdminNetworkPool = (): UseAdminNetworkPoolInterface => {
         return response.error;
     };
 
+    const formArr = computed(() => {
+        return localNetworkPool.formArr;
+    });
+
+    const formErrors = computed(() => {
+        return localNetworkPool.formErrors;
+    });
+
+    const formObj = computed(() => {
+        return localNetworkPool.formObj;
+    });
+
+    const formSuccess = computed(() => {
+        return localNetworkPool.formSuccess;
+    });
+
     const getChoices = async () => {
         localNetworkPool.choices = await client.get(
             'admin/network/pool/choices'
@@ -91,7 +123,21 @@ export const useAdminNetworkPool = (): UseAdminNetworkPoolInterface => {
         choices: {},
         formArr: [],
         formErrors: {},
-        formObj: {},
+        formObj: {
+            assigned: '',
+            assigned_name: '',
+            broadcast: null,
+            date_from: '',
+            id: 0,
+            ip_available: 0,
+            ip_total: 0,
+            ip_type: 0,
+            is_active: false,
+            name: '',
+            netmask: null,
+            network: '',
+            subnet: 0
+        },
         formSuccess: false
     });
 
@@ -113,12 +159,16 @@ export const useAdminNetworkPool = (): UseAdminNetworkPoolInterface => {
     };
 
     return {
+        choices,
         createPool,
         deletePool,
+        formArr,
+        formErrors,
+        formObj,
+        formSuccess,
         getChoices,
         getProfile,
         getSearch,
-        localNetworkPool,
         updateProfile
     };
 };

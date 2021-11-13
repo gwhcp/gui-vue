@@ -1,33 +1,49 @@
 import { client, usePageLoading } from "@/composables";
-import { reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseAdminCompanyDnsInterface {
+    choices: ComputedRef<{
+        ns: Record<string, number>;
+        zone: Record<string, string>;
+    }>;
     createRecord: (values: Record<string, unknown>) => Promise<void>;
     deleteRecord: (values: {
         domain: string;
         id: string;
     }) => Promise<void>;
+    formArr: ComputedRef<string[]>;
+    formErrors: ComputedRef<Record<string, unknown>>;
+    formObj: ComputedRef<{
+        company: number;
+        company_name: string;
+        data: string;
+        host: string;
+        id: number;
+        manage_dns: boolean;
+        mx_priority: null | number;
+        name: string;
+        ns: string[];
+        record_type: string;
+    }>;
+    formSuccess: ComputedRef<boolean>;
     getChoices: () => Promise<void>;
     getNameserverBase: () => Promise<void>;
     getNameserverDomain: (id: string) => Promise<void>;
     getProfile: (id: string) => Promise<void>;
     getSearch: () => Promise<void>;
     getSearchRecord: (id: string) => Promise<void>;
-    localCompanyDns: {
-        choices: Record<string, unknown>;
-        formArr: string[];
-        formErrors: Record<string, unknown>;
-        formObj: Record<string, unknown>;
-        formSuccess: boolean;
-        nameserverBase: string[];
-        nameserverDomain: string[];
-    };
+    nameserverBase: ComputedRef<string[]>;
+    nameserverDomain: ComputedRef<string[]>;
     updateNameserver: (id: string, values: string[]) => Promise<void>;
     updateProfile: (id: string, values: Record<string, unknown>) => Promise<void>;
 }
 
 export const useAdminCompanyDns = (): UseAdminCompanyDnsInterface => {
     const { loadingState } = usePageLoading();
+
+    const choices = computed(() => {
+        return localCompanyDns.choices;
+    });
 
     const createRecord = async (values: Record<string, unknown>) => {
         loadingState.isActive = true;
@@ -68,6 +84,22 @@ export const useAdminCompanyDns = (): UseAdminCompanyDnsInterface => {
 
         return response.error;
     };
+
+    const formArr = computed(() => {
+        return localCompanyDns.formArr;
+    });
+
+    const formErrors = computed(() => {
+        return localCompanyDns.formErrors;
+    });
+
+    const formObj = computed(() => {
+        return localCompanyDns.formObj;
+    });
+
+    const formSuccess = computed(() => {
+        return localCompanyDns.formSuccess;
+    });
 
     const getChoices = async () => {
         localCompanyDns.choices = await client.get(
@@ -137,13 +169,35 @@ export const useAdminCompanyDns = (): UseAdminCompanyDnsInterface => {
     };
 
     const localCompanyDns = reactive({
-        choices: {},
+        choices: {
+            ns: {},
+            zone: {}
+        },
         formArr: [],
         formErrors: {},
-        formObj: {},
+        formObj: {
+            company: 0,
+            company_name: '',
+            data: '',
+            host: '',
+            id: 0,
+            manage_dns: false,
+            mx_priority: null,
+            name: '',
+            ns: [],
+            record_type: ''
+        },
         formSuccess: false,
         nameserverBase: [],
         nameserverDomain: []
+    });
+
+    const nameserverBase = computed(() => {
+        return localCompanyDns.nameserverBase;
+    });
+
+    const nameserverDomain = computed(() => {
+        return localCompanyDns.nameserverDomain;
     });
 
     const updateNameserver = async (id: string, values: string[]) => {
@@ -189,15 +243,21 @@ export const useAdminCompanyDns = (): UseAdminCompanyDnsInterface => {
     };
 
     return {
+        choices,
         createRecord,
         deleteRecord,
+        formArr,
+        formErrors,
+        formObj,
+        formSuccess,
         getChoices,
         getNameserverBase,
         getNameserverDomain,
         getProfile,
         getSearch,
         getSearchRecord,
-        localCompanyDns,
+        nameserverBase,
+        nameserverDomain,
         updateNameserver,
         updateProfile
     };

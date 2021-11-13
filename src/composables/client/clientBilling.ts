@@ -1,23 +1,43 @@
 import { client, usePageLoading } from "@/composables";
-import { reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseClientBillingInterface {
     createBillingProfile: (values: Record<string, unknown>) => Promise<void>;
     deleteBillingProfile: (values: {
         id: string;
     }) => Promise<void>;
+    formArr: ComputedRef<string[]>;
+    formErrors: ComputedRef<Record<string, unknown>>;
+    formObj: ComputedRef<{
+        address: string;
+        city: string;
+        country: string;
+        credit_card_cvv2: number;
+        credit_card_month: number;
+        credit_card_name: string;
+        credit_card_number: number;
+        credit_card_year: number;
+        date_from: string;
+        id: number;
+        items: string[];
+        name: string;
+        order: {
+            id: number;
+        };
+        primary_phone: string;
+        state: string;
+        store_product: {
+            name: string;
+        };
+        zipcode: string;
+    }>;
+    formSuccess: ComputedRef<boolean>;
     getProfile: (id: string) => Promise<void>;
     getProfileInvoice: (id: string, invoiceId: string) => Promise<void>;
     getSearch: () => Promise<void>;
     getSearchInvoice: (id: string) => Promise<void>;
-    localClientBilling: {
-        formArr: string[];
-        formErrors: Record<string, unknown>;
-        formObj: Record<string, unknown>;
-        formSuccess: boolean;
-        nonFieldFormError: boolean;
-        nonFieldFormMessage: string;
-    };
+    nonFieldFormError: ComputedRef<boolean>;
+    nonFieldFormMessage: ComputedRef<string>;
     updateProfile: (id: string, values: Record<string, unknown>) => Promise<void>;
 }
 
@@ -70,6 +90,22 @@ export const useClientBilling = (): UseClientBillingInterface => {
         return response.error;
     };
 
+    const formArr = computed(() => {
+        return localClientBilling.formArr;
+    });
+
+    const formErrors = computed(() => {
+        return localClientBilling.formErrors;
+    });
+
+    const formObj = computed(() => {
+        return localClientBilling.formObj;
+    });
+
+    const formSuccess = computed(() => {
+        return localClientBilling.formSuccess;
+    });
+
     const getProfile = async (id: string) => {
         loadingState.isActive = true;
 
@@ -113,10 +149,40 @@ export const useClientBilling = (): UseClientBillingInterface => {
     const localClientBilling = reactive({
         formArr: [],
         formErrors: {},
-        formObj: {},
+        formObj: {
+            address: '',
+            city: '',
+            country: '',
+            credit_card_cvv2: 0,
+            credit_card_month: 0,
+            credit_card_name: '',
+            credit_card_number: 0,
+            credit_card_year: 0,
+            date_from: '',
+            id: 0,
+            items: [],
+            name: '',
+            order: {
+                id: 0
+            },
+            primary_phone: '',
+            state: '',
+            store_product: {
+                name: ''
+            },
+            zipcode: ''
+        },
         formSuccess: false,
         nonFieldFormError: false,
         nonFieldFormMessage: ''
+    });
+
+    const nonFieldFormError = computed(() => {
+        return localClientBilling.nonFieldFormError;
+    });
+
+    const nonFieldFormMessage = computed(() => {
+        return localClientBilling.nonFieldFormMessage;
     });
 
     const updateProfile = async (id: string, values: Record<string, unknown>) => {
@@ -145,11 +211,16 @@ export const useClientBilling = (): UseClientBillingInterface => {
     return {
         createBillingProfile,
         deleteBillingProfile,
+        formArr,
+        formErrors,
+        formObj,
+        formSuccess,
         getProfile,
         getProfileInvoice,
         getSearch,
         getSearchInvoice,
-        localClientBilling,
+        nonFieldFormError,
+        nonFieldFormMessage,
         updateProfile
     };
 };

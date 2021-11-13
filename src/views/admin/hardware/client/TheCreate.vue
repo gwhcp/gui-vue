@@ -72,7 +72,7 @@
 import { InputSelect, InputSwitch, InputText } from "@/components";
 import { useAdminHardwareClient } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { boolean, object, string } from "yup";
 
 export default defineComponent({
@@ -84,25 +84,9 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { createHardware, getChoices, localHardwareClient } = useAdminHardwareClient();
-
-        const choices = computed(() => {
-            return localHardwareClient.choices;
-        });
+        const { choices, createHardware, formErrors, formObj, formSuccess, getChoices } = useAdminHardwareClient();
 
         const disable_domain = ref(false);
-
-        const formErrors = computed(() => {
-            return localHardwareClient.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localHardwareClient.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localHardwareClient.formSuccess;
-        });
 
         const has_domain = ref(false);
 
@@ -116,13 +100,13 @@ export default defineComponent({
 
         const schema = object({
             domain: string().required(),
-            ip: string().required(),
             hardware_type: string().required(),
-            target_type: string().required(),
+            ip: string().required(),
             is_domain: boolean(),
             is_mail: boolean(),
             is_mysql: boolean(),
             is_postgresql: boolean(),
+            target_type: string().required(),
             web_type: string()
         });
 

@@ -1,6 +1,6 @@
 <template>
     <div class="row mb-3">
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'client:order:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -19,8 +19,8 @@
 
 <script lang="ts">
 import { SearchGrid } from "@/components"
-import { useAuth, useAdminBillingReason, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { useAdminBillingReason, useAuth, useSearchGrid } from "@/composables";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheSearch",
@@ -30,13 +30,9 @@ export default defineComponent({
     setup() {
         const { hasPerm } = useAuth();
 
-        const { getSearch, localBillingReason } = useAdminBillingReason();
+        const { formArr, formErrors, getSearch } = useAdminBillingReason();
 
-        const { filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, filterString } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -60,29 +56,17 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localBillingReason.formArr;
-        });
-
-        const formErrors = computed(() => {
-            return localBillingReason.formErrors;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             formArr,
             formErrors,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

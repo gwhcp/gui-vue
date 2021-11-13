@@ -38,7 +38,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('admin_company_xmpp.delete_prosodyaccount')"
+        <div v-if="cellSelected && hasPerm('admin_company_xmpp.delete_prosodyaccount')"
              class="col-auto">
             <modal-open-delete :delete="deleteGroup"
                                :form-arr="formArr"
@@ -68,11 +68,7 @@ export default defineComponent({
 
         const { deleteGroup, getSearchGroup, localCompanyXmpp } = useAdminCompanyXmpp();
 
-        const { filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, filterString } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -102,23 +98,19 @@ export default defineComponent({
             return localCompanyXmpp.nonFieldFormMessage;
         });
 
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearchGroup();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deleteGroup,
             formArr,
             hasPerm,
             nonFieldFormError,
-            nonFieldFormMessage,
-            selected
+            nonFieldFormMessage
         };
     }
 });

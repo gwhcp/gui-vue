@@ -6,7 +6,7 @@
 <script lang="ts">
 import { SearchGrid } from "@/components";
 import { useClientAccount, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheAccessLog",
@@ -14,7 +14,7 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
-        const { getAccessLog, localClientAccount } = useClientAccount();
+        const { formArr, getAccessLog } = useClientAccount();
 
         const { filterDate, filterString, formatDate } = useSearchGrid();
 
@@ -39,10 +39,6 @@ export default defineComponent({
                 filterParams: filterString()
             }
         ];
-
-        const formArr = computed(() => {
-            return localClientAccount.formArr;
-        });
 
         onMounted(() => {
             getAccessLog();

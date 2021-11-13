@@ -49,9 +49,9 @@
 
 <script lang="ts">
 import { InputSwitch } from "@/components"
-import { useAuth, useAdminBillingPayment } from "@/composables";
+import { useAdminBillingPayment, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { boolean, object } from "yup";
 
@@ -62,31 +62,19 @@ export default defineComponent({
         InputSwitch
     },
     setup() {
+        const {
+            formErrors,
+            formObj,
+            formSuccess,
+            getMethod,
+            nonFieldFormError,
+            nonFieldFormMessage,
+            updateMethod
+        } = useAdminBillingPayment();
+
         const { hasPermForm } = useAuth();
 
-        const { getMethod, localBillingPayment, updateMethod } = useAdminBillingPayment();
-
         const route = useRoute();
-
-        const formErrors = computed(() => {
-            return localBillingPayment.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localBillingPayment.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localBillingPayment.formSuccess;
-        });
-
-        const nonFieldFormError = computed(() => {
-            return localBillingPayment.nonFieldFormError;
-        });
-
-        const nonFieldFormMessage = computed(() => {
-            return localBillingPayment.nonFieldFormMessage;
-        });
 
         const paymentId = route.params.id.toString();
 

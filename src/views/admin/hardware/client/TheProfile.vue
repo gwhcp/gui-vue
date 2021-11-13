@@ -107,9 +107,9 @@
 
 <script lang="ts">
 import { InputSwitch, ModalOpenInstall, StaticData } from "@/components";
-import { useAuth, useAdminHardwareClient } from "@/composables";
+import { useAdminHardwareClient, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { boolean, object } from "yup";
 
@@ -122,27 +122,19 @@ export default defineComponent({
         StaticData
     },
     setup() {
+        const {
+            formErrors,
+            formObj,
+            formSuccess,
+            getProfile,
+            installHardware,
+            installSuccess,
+            updateProfile
+        } = useAdminHardwareClient();
+
         const { hasPermForm } = useAuth();
 
-        const { getProfile, installHardware, localHardwareClient, updateProfile } = useAdminHardwareClient();
-
         const route = useRoute();
-
-        const formErrors = computed(() => {
-            return localHardwareClient.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localHardwareClient.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localHardwareClient.formSuccess;
-        });
-
-        const installSuccess = computed(() => {
-            return localHardwareClient.installSuccess;
-        });
 
         const schema = object({
             is_active: boolean()
@@ -168,7 +160,7 @@ export default defineComponent({
         };
     },
     methods: {
-        getColor(value: string) {
+        getColor(value: boolean) {
             return (value ? 'text-success' : 'text-danger');
         },
         async submitUpdate(values: Record<string, unknown>, actions: { setErrors: (arg0: Record<string, unknown>) => void; }) {

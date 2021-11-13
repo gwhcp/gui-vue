@@ -37,7 +37,7 @@
 import { InputText } from "@/components";
 import { useAdminEmployeeAccount } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent } from "vue";
+import { defineComponent } from "vue";
 import { object, ref, string } from "yup";
 
 export default defineComponent({
@@ -47,24 +47,12 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { localEmployeeAccount, updatePassword } = useAdminEmployeeAccount();
-
-        const formErrors = computed(() => {
-            return localEmployeeAccount.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localEmployeeAccount.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localEmployeeAccount.formSuccess;
-        });
+        const { formErrors, formObj, formSuccess, updatePassword } = useAdminEmployeeAccount();
 
         const schema = object({
+            confirmed_password: string().required().min(5).oneOf([ref('password'), null], 'Password must match'),
             old_password: string().required().min(5),
-            password: string().required().min(5),
-            confirmed_password: string().required().min(5).oneOf([ref('password'), null], 'Password must match')
+            password: string().required().min(5)
         });
 
         return {

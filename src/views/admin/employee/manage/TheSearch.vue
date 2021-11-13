@@ -12,7 +12,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'admin:employee:manage:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -24,7 +24,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('admin_employee_manage.delete_account')"
+        <div v-if="cellSelected && hasPerm('admin_employee_manage.delete_account')"
              class="col-auto">
             <modal-open-delete :delete="deleteAccount"
                                :form-arr="formArr"
@@ -40,8 +40,8 @@
 
 <script lang="ts">
 import { ModalOpenDelete, SearchGrid } from "@/components";
-import { useAuth, useAdminEmployeeManage, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { useAdminEmployeeManage, useAuth, useSearchGrid } from "@/composables";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheSearch",
@@ -50,15 +50,11 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
+        const { deleteAccount, formArr, getAccounts } = useAdminEmployeeManage();
+
         const { hasPerm } = useAuth();
 
-        const { deleteAccount, getAccounts, localEmployeeManage } = useAdminEmployeeManage();
-
-        const { cellStatus, filterString, formatStatus, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, cellStatus, filterString, formatStatus } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -93,25 +89,17 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localEmployeeManage.formArr;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getAccounts();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deleteAccount,
             formArr,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

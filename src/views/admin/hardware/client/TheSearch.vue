@@ -12,7 +12,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'admin:hardware:client:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -24,7 +24,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('admin_hardware_client.delete_server') && !cellParams['in_queue']"
+        <div v-if="cellSelected && hasPerm('admin_hardware_client.delete_server') && !cellParams['in_queue']"
              class="col-auto">
             <modal-open-delete :delete="deleteHardware"
                                :form-arr="formArr"
@@ -41,8 +41,8 @@
 
 <script lang="ts">
 import { ModalOpenDelete, SearchGrid } from "@/components";
-import { useAuth, useAdminHardwareClient, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { useAdminHardwareClient, useAuth, useSearchGrid } from "@/composables";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheSearch",
@@ -51,15 +51,11 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
+        const { deleteHardware, formArr, formErrors, getSearch } = useAdminHardwareClient();
+
         const { hasPerm } = useAuth();
 
-        const { deleteHardware, getSearch, localHardwareClient } = useAdminHardwareClient();
-
-        const { cellQueueStatus, filterString, formatQueueStatus, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, cellQueueStatus, filterString, formatQueueStatus } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -91,30 +87,18 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localHardwareClient.formArr;
-        });
-
-        const formErrors = computed(() => {
-            return localHardwareClient.formErrors;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deleteHardware,
             formArr,
             formErrors,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

@@ -40,7 +40,7 @@
 import { InputSelect, InputText, InputWysiwyg } from "@/components";
 import { useAdminSettingEmail } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { object, string } from "yup";
 
 export default defineComponent({
@@ -52,23 +52,7 @@ export default defineComponent({
         InputWysiwyg
     },
     setup() {
-        const { createEmailTemplate, getChoices, localSettingEmail } = useAdminSettingEmail();
-
-        const choices = computed(() => {
-            return localSettingEmail.choices;
-        });
-
-        const formErrors = computed(() => {
-            return localSettingEmail.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localSettingEmail.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localSettingEmail.formSuccess;
-        });
+        const { choices, createEmailTemplate, formErrors, formObj, formSuccess, getChoices } = useAdminSettingEmail();
 
         const schema = object({
             body: string().required(),

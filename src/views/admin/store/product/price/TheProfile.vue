@@ -27,6 +27,7 @@
                     <static-data :datetime="formObj.date_from"
                                  name="Created Date"/>
 
+                    <!-- TODO months? thought this was days... -->
                     <static-data :text_right="'Month(s)'"
                                  :value="formObj.billing_cycle"
                                  name="Billing Cycle"/>
@@ -67,9 +68,9 @@
 <script lang="ts">
 import { InputSwitch, InputText, StaticData } from "@/components";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { boolean, number, object } from "yup";
-import { useAuth, useAdminStoreProduct, useAdminStoreProductPrice } from "@/composables";
+import { useAdminStoreProduct, useAdminStoreProductPrice, useAuth } from "@/composables";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -81,25 +82,13 @@ export default defineComponent({
         StaticData
     },
     setup() {
+        const { getProductUrl } = useAdminStoreProduct();
+
+        const { formErrors, formObj, formSuccess, getProfile, updateProfile } = useAdminStoreProductPrice();
+
         const { hasPermForm } = useAuth();
 
         const route = useRoute();
-
-        const { getProductUrl } = useAdminStoreProduct();
-
-        const { getProfile, localStoreProductPrice, updateProfile } = useAdminStoreProductPrice();
-
-        const formErrors = computed(() => {
-            return localStoreProductPrice.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localStoreProductPrice.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localStoreProductPrice.formSuccess;
-        });
 
         const priceId = route.params.id.toString();
 
@@ -109,9 +98,9 @@ export default defineComponent({
 
         const schema = object({
             base_price: number().required(),
-            setup_price: number().required(),
             is_active: boolean(),
-            is_hidden: boolean()
+            is_hidden: boolean(),
+            setup_price: number().required()
         });
 
         onMounted(() => {

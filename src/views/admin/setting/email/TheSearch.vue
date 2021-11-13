@@ -12,7 +12,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'admin:setting:email:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -24,7 +24,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('admin_setting_email.delete_emailtemplate')"
+        <div v-if="cellSelected && hasPerm('admin_setting_email.delete_emailtemplate')"
              class="col-auto">
             <modal-open-delete :delete="deleteEmailTemplate"
                                :form-arr="formArr"
@@ -40,8 +40,8 @@
 
 <script lang="ts">
 import { ModalOpenDelete, SearchGrid } from "@/components";
-import { useAuth, useSearchGrid, useAdminSettingEmail } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { useAdminSettingEmail, useAuth, useSearchGrid } from "@/composables";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheSearch",
@@ -50,15 +50,11 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
+        const { deleteEmailTemplate, formArr, formErrors, getSearch } = useAdminSettingEmail();
+
         const { hasPerm } = useAuth();
 
-        const { deleteEmailTemplate, getSearch, localSettingEmail } = useAdminSettingEmail();
-
-        const { filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, filterString } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -82,30 +78,18 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localSettingEmail.formArr;
-        });
-
-        const formErrors = computed(() => {
-            return localSettingEmail.formErrors;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deleteEmailTemplate,
             formArr,
             formErrors,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

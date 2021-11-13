@@ -12,7 +12,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'client:billing:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -24,7 +24,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('client_billing.delete_billingprofile')"
+        <div v-if="cellSelected && hasPerm('client_billing.delete_billingprofile')"
              class="col-auto">
             <modal-open-delete :delete="deleteBillingProfile"
                                :form-arr="formArr"
@@ -42,7 +42,7 @@
 <script lang="ts">
 import { ModalOpenDelete, SearchGrid } from "@/components"
 import { useAuth, useClientBilling, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheSearch",
@@ -53,13 +53,9 @@ export default defineComponent({
     setup() {
         const { hasPerm } = useAuth();
 
-        const { deleteBillingProfile, getSearch, localClientBilling } = useClientBilling();
+        const { deleteBillingProfile, formArr, formErrors, getSearch } = useClientBilling();
 
-        const { filterString, formatStatus, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, filterString, formatStatus } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -87,30 +83,18 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localClientBilling.formArr;
-        });
-
-        const formErrors = computed(() => {
-            return localClientBilling.formErrors;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deleteBillingProfile,
             formArr,
             formErrors,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

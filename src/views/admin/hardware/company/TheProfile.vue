@@ -80,9 +80,9 @@
 
 <script lang="ts">
 import { InputSwitch, ModalOpenInstall, StaticData } from "@/components";
-import { useAuth, useAdminHardwareCompany } from "@/composables";
+import { useAdminHardwareCompany, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { boolean, object } from "yup";
 
@@ -95,27 +95,19 @@ export default defineComponent({
         StaticData
     },
     setup() {
+        const {
+            formErrors,
+            formObj,
+            formSuccess,
+            getProfile,
+            installHardware,
+            installSuccess,
+            updateProfile
+        } = useAdminHardwareCompany();
+
         const { hasPermForm } = useAuth();
 
-        const { getProfile, installHardware, localHardwareCompany, updateProfile } = useAdminHardwareCompany();
-
         const route = useRoute();
-
-        const formErrors = computed(() => {
-            return localHardwareCompany.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localHardwareCompany.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localHardwareCompany.formSuccess;
-        });
-
-        const installSuccess = computed(() => {
-            return localHardwareCompany.installSuccess;
-        });
 
         const schema = object({
             is_active: boolean()

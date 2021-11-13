@@ -1,9 +1,11 @@
-import { computed, reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 import { useAuth } from "@/composables/auth";
 import moment from "moment-timezone";
 
 interface UseSearchGridInterface {
     cellInvoiceType: (params: string) => object;
+    cellParams: ComputedRef<Record<string, unknown>>;
+    cellSelected: ComputedRef<boolean>;
     cellQueueStatus: (params: string) => object;
     cellQueueType: (params: string) => object;
     cellStatus: (params: string) => object;
@@ -21,15 +23,13 @@ interface UseSearchGridInterface {
     formatQueueStatus: (params: string) => string;
     formatStatus: (params: string) => string;
     formatTransactionType: (params: string) => string;
-    globalGrid: {
-        cellParams: string;
-        selected: boolean;
-    };
+    selectionClear: () => void;
+    selectionUpdate: (selectedRow: string[]) => void;
 }
 
-const globalGrid = reactive({
-    cellParams: '',
-    selected: false
+const globalSearchGrid = reactive({
+    cellParams: {},
+    cellSelected: false
 });
 
 export const useSearchGrid = (): UseSearchGridInterface => {
@@ -44,6 +44,14 @@ export const useSearchGrid = (): UseSearchGridInterface => {
             return { color: '#FFC107' };
         }
     };
+
+    const cellParams = computed(() => {
+        return globalSearchGrid.cellParams;
+    });
+
+    const cellSelected = computed(() => {
+        return globalSearchGrid.cellSelected;
+    });
 
     const cellQueueStatus = (params: any) => {
         if (!params.data.in_queue) {
@@ -193,8 +201,28 @@ export const useSearchGrid = (): UseSearchGridInterface => {
         }
     };
 
+    const selectionClear = () => {
+        globalSearchGrid.cellParams = [];
+
+        globalSearchGrid.cellSelected = false;
+    }
+
+    const selectionUpdate = (selectedRow: string[]) => {
+        if (selectedRow.length === 1) {
+            globalSearchGrid.cellSelected = true;
+
+            globalSearchGrid.cellParams = selectedRow[0];
+        } else {
+            globalSearchGrid.cellParams = [];
+
+            globalSearchGrid.cellSelected = false;
+        }
+    }
+
     return {
         cellInvoiceType,
+        cellParams,
+        cellSelected,
         cellQueueStatus,
         cellQueueType,
         cellStatus,
@@ -207,6 +235,7 @@ export const useSearchGrid = (): UseSearchGridInterface => {
         formatQueueStatus,
         formatStatus,
         formatTransactionType,
-        globalGrid
+        selectionClear,
+        selectionUpdate
     };
 };

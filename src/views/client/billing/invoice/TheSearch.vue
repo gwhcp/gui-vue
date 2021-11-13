@@ -10,7 +10,7 @@
     </nav>
 
     <div class="row mb-3">
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'client:billing:invoice:profile', params: { id: profileId, invoice_id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -30,7 +30,7 @@
 <script lang="ts">
 import { SearchGrid } from "@/components"
 import { useClientBilling, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -39,15 +39,11 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
-        const { getSearchInvoice, localClientBilling } = useClientBilling();
+        const { formArr, getSearchInvoice } = useClientBilling();
 
-        const { filterDate, filterString, formatDate, globalGrid } = useSearchGrid();
+        const { cellParams, cellSelected, filterDate, filterString, formatDate } = useSearchGrid();
 
         const route = useRoute();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
 
         const profileId = route.params.id.toString();
 
@@ -80,24 +76,16 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localClientBilling.formArr;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearchInvoice(profileId);
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             formArr,
-            profileId,
-            selected
+            profileId
         };
     }
 });

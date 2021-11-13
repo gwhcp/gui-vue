@@ -55,7 +55,7 @@
 import { InputText, StaticData } from "@/components";
 import { useAdminStoreProduct, useAdminStoreProductPrice } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { number, object } from "yup";
 
@@ -67,31 +67,19 @@ export default defineComponent({
         StaticData
     },
     setup() {
-        const route = useRoute();
-
         const { getProductUrl } = useAdminStoreProduct();
 
-        const { createPrice, localStoreProductPrice } = useAdminStoreProductPrice();
+        const { createPrice, formErrors, formObj, formSuccess } = useAdminStoreProductPrice();
 
-        const formErrors = computed(() => {
-            return localStoreProductPrice.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localStoreProductPrice.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localStoreProductPrice.formSuccess;
-        });
+        const route = useRoute();
 
         const productId = route.params.productId.toString();
 
         const productType = route.params.type.toString();
 
         const schema = object({
-            billing_cycle: number().required().integer().positive(),
             base_price: number().required(),
+            billing_cycle: number().required().integer().positive(),
             setup_price: number().required()
         });
 

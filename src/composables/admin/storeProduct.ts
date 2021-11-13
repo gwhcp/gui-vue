@@ -1,15 +1,21 @@
 import { client } from "@/composables";
-import { reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseAdminStoreProductInterface {
+    choices: ComputedRef<{
+        company: Record<string, string>;
+        ip_type: Record<string, string>;
+        web: Record<string, string>;
+    }>;
     getChoices: () => Promise<void>;
     getProductUrl: (value: string, route: string) => string;
-    localStoreProduct: {
-        choices: Record<string, unknown>;
-    };
 }
 
 export const useAdminStoreProduct = (): UseAdminStoreProductInterface => {
+    const choices = computed(() => {
+        return localStoreProduct.choices;
+    });
+
     const getChoices = async () => {
         localStoreProduct.choices = await client.get(
             'admin/store/product/choices'
@@ -27,12 +33,16 @@ export const useAdminStoreProduct = (): UseAdminStoreProductInterface => {
     };
 
     const localStoreProduct = reactive({
-        choices: {}
+        choices: {
+            company: {},
+            ip_type: {},
+            web: {}
+        }
     });
 
     return {
+        choices,
         getChoices,
-        getProductUrl,
-        localStoreProduct
+        getProductUrl
     };
 };

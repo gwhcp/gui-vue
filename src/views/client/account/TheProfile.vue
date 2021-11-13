@@ -99,7 +99,7 @@
 import { InputSelect, InputSelectCountry, InputSelectState, InputText, StaticData } from "@/components";
 import { useAuth, useClientAccount } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { number, object, string } from "yup";
 
 export default defineComponent({
@@ -115,38 +115,22 @@ export default defineComponent({
     setup() {
         const { hasPermForm } = useAuth();
 
-        const { getChoices, getProfile, localClientAccount, updateProfile } = useClientAccount();
-
-        const choices = computed(() => {
-            return localClientAccount.choices;
-        });
-
-        const formErrors = computed(() => {
-            return localClientAccount.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localClientAccount.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localClientAccount.formSuccess;
-        });
+        const { choices, formErrors, formObj, formSuccess, getChoices, getProfile, updateProfile } = useClientAccount();
 
         const schema = object({
-            first_name: string().required(),
-            last_name: string().required(),
             address: string().required(),
             city: string().required(),
+            comment_order: string().required(),
             country: string().required(),
-            state: string().required(),
-            zipcode: string().required(),
+            email: string().required().email(),
+            first_name: string().required(),
+            last_name: string().required(),
             primary_phone: number().required().positive().integer(),
             secondary_phone: number().positive().integer().nullable(),
-            email: string().required().email(),
-            comment_order: string().required(),
+            state: string().required(),
             time_format: number().positive().integer().required(),
-            time_zone: string().required()
+            time_zone: string().required(),
+            zipcode: string().required()
         });
 
         onMounted(() => {

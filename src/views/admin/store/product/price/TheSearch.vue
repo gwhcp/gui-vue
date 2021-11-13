@@ -26,7 +26,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'admin:store:product:price:profile', params: { id: cellParams['id'], productId: cellParams['store_product'] } }">
                 <button class="btn btn-primary"
@@ -38,7 +38,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('admin_store_product_price.delete_storeproductprice')"
+        <div v-if="cellSelected && hasPerm('admin_store_product_price.delete_storeproductprice')"
              class="col-auto">
             <modal-open-delete :delete="deletePrice"
                                :form-arr="formArr"
@@ -54,8 +54,8 @@
 
 <script lang="ts">
 import { ModalOpenDelete, SearchGrid } from "@/components";
-import { useAuth, useSearchGrid, useAdminStoreProduct, useAdminStoreProductPrice } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { useAdminStoreProduct, useAdminStoreProductPrice, useAuth, useSearchGrid } from "@/composables";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -65,19 +65,15 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
+        const { getProductUrl } = useAdminStoreProduct();
+
+        const { deletePrice, formArr, formErrors, getSearch } = useAdminStoreProductPrice();
+
         const { hasPerm } = useAuth();
 
         const route = useRoute();
 
-        const { getProductUrl } = useAdminStoreProduct();
-
-        const { deletePrice, getSearch, localStoreProductPrice } = useAdminStoreProductPrice();
-
-        const { cellStatus, filterString, formatStatus, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, cellStatus, filterString, formatStatus } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -115,21 +111,9 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localStoreProductPrice.formArr;
-        });
-
-        const formErrors = computed(() => {
-            return localStoreProductPrice.formErrors;
-        });
-
         const productId = route.params.productId.toString();
 
         const productType = route.params.type.toString();
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
 
         onMounted(() => {
             getSearch(productId);
@@ -137,6 +121,7 @@ export default defineComponent({
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deletePrice,
             formArr,
@@ -144,8 +129,7 @@ export default defineComponent({
             getProductUrl,
             hasPerm,
             productId,
-            productType,
-            selected
+            productType
         };
     }
 });

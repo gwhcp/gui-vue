@@ -97,7 +97,7 @@
 import { InputSelectCountry, InputSelectState, InputText } from "@/components";
 import { useClientBilling } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent } from "vue";
+import { defineComponent } from "vue";
 import { number, object, string } from "yup";
 
 export default defineComponent({
@@ -109,41 +109,28 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { createBillingProfile, localClientBilling } = useClientBilling();
-
-        const formErrors = computed(() => {
-            return localClientBilling.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localClientBilling.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localClientBilling.formSuccess;
-        });
-
-        const nonFieldFormError = computed(() => {
-            return localClientBilling.nonFieldFormError;
-        });
-
-        const nonFieldFormMessage = computed(() => {
-            return localClientBilling.nonFieldFormMessage;
-        });
+        const {
+            createBillingProfile,
+            formErrors,
+            formObj,
+            formSuccess,
+            nonFieldFormError,
+            nonFieldFormMessage
+        } = useClientBilling();
 
         const schema = object({
-            name: string().required(),
             address: string().required(),
             city: string().required(),
             country: string().required(),
-            state: string().required(),
-            zipcode: string().required(),
-            primary_phone: number().required().positive().integer(),
+            credit_card_cvv2: string().required().min(3).max(4),
+            credit_card_month: string().required().length(2),
             credit_card_name: string().required(),
             credit_card_number: string().required().min(15).max(16),
-            credit_card_month: string().required().length(2),
             credit_card_year: string().required().length(4),
-            credit_card_cvv2: string().required().min(3).max(4)
+            name: string().required(),
+            primary_phone: number().required().positive().integer(),
+            state: string().required(),
+            zipcode: string().required()
         });
 
         return {

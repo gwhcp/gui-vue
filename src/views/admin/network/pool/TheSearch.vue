@@ -12,7 +12,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'admin:network:pool:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -24,7 +24,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('admin_network_pool.delete_ipaddresssetup')"
+        <div v-if="cellSelected && hasPerm('admin_network_pool.delete_ipaddresssetup')"
              class="col-auto">
             <modal-open-delete :delete="deletePool"
                                :form-arr="formArr"
@@ -41,8 +41,8 @@
 
 <script lang="ts">
 import { ModalOpenDelete, SearchGrid } from "@/components";
-import { useAuth, useAdminNetworkPool, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { useAdminNetworkPool, useAuth, useSearchGrid } from "@/composables";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheSearch",
@@ -51,15 +51,11 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
+        const { deletePool, formArr, formErrors, getSearch } = useAdminNetworkPool();
+
         const { hasPerm } = useAuth();
 
-        const { deletePool, getSearch, localNetworkPool } = useAdminNetworkPool();
-
-        const { filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, filterString } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -89,30 +85,18 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localNetworkPool.formArr;
-        });
-
-        const formErrors = computed(() => {
-            return localNetworkPool.formErrors;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deletePool,
             formArr,
             formErrors,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

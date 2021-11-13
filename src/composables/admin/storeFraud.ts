@@ -1,25 +1,34 @@
 import { client, usePageLoading } from "@/composables";
-import { reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseAdminStoreFraudInterface {
+    choices: ComputedRef<Record<string, string>>;
     createFraudString: (values: Record<string, unknown>) => Promise<void>;
     deleteFraudString: (values: {
         id: string;
     }) => Promise<void>;
+    formArr: ComputedRef<string[]>;
+    formErrors: ComputedRef<Record<string, unknown>>;
+    formObj: ComputedRef<{
+        date_from: string;
+        fraud_type: string;
+        fraud_type_name: string;
+        id: number;
+        is_active: boolean;
+        name: string;
+    }>;
+    formSuccess: ComputedRef<boolean>;
     getChoices: () => Promise<void>;
     getProfile: (id: string) => Promise<void>;
     getSearch: () => Promise<void>;
-    localStoreFraud: {
-        choices: Record<string, unknown>;
-        formArr: string[];
-        formErrors: Record<string, unknown>;
-        formObj: Record<string, unknown>;
-        formSuccess: boolean;
-    };
 }
 
 export const useAdminStoreFraud = (): UseAdminStoreFraudInterface => {
     const { loadingState } = usePageLoading();
+
+    const choices = computed(() => {
+        return localStoreFraud.choices;
+    });
 
     const createFraudString = async (values: Record<string, unknown>) => {
         loadingState.isActive = true;
@@ -60,6 +69,22 @@ export const useAdminStoreFraud = (): UseAdminStoreFraudInterface => {
         return response.error;
     };
 
+    const formArr = computed(() => {
+        return localStoreFraud.formArr;
+    });
+
+    const formErrors = computed(() => {
+        return localStoreFraud.formErrors;
+    });
+
+    const formObj = computed(() => {
+        return localStoreFraud.formObj;
+    });
+
+    const formSuccess = computed(() => {
+        return localStoreFraud.formSuccess;
+    });
+
     const getChoices = async () => {
         localStoreFraud.choices = await client.get(
             'admin/store/fraud/choices'
@@ -90,16 +115,27 @@ export const useAdminStoreFraud = (): UseAdminStoreFraudInterface => {
         choices: {},
         formArr: [],
         formErrors: {},
-        formObj: {},
+        formObj: {
+            date_from: '',
+            fraud_type: '',
+            fraud_type_name: '',
+            id: 0,
+            is_active: false,
+            name: ''
+        },
         formSuccess: false
     });
 
     return {
+        choices,
         createFraudString,
         deleteFraudString,
+        formArr,
+        formErrors,
+        formObj,
+        formSuccess,
         getChoices,
         getProfile,
-        getSearch,
-        localStoreFraud
+        getSearch
     };
 };

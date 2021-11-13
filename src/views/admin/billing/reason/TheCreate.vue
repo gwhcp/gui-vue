@@ -30,7 +30,7 @@
 import { InputSelect, InputText } from "@/components"
 import { useAdminBillingReason } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { object, string } from "yup";
 
 export default defineComponent({
@@ -41,23 +41,7 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { createReason, getChoices, localBillingReason } = useAdminBillingReason();
-
-        const choices = computed(() => {
-            return localBillingReason.choices;
-        });
-
-        const formErrors = computed(() => {
-            return localBillingReason.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localBillingReason.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localBillingReason.formSuccess;
-        });
+        const { choices, createReason, formErrors, formObj, formSuccess, getChoices } = useAdminBillingReason();
 
         const schema = object({
             name: string().required(),

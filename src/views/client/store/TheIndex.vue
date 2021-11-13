@@ -107,20 +107,24 @@
             </div>
         </div>
     </div>
+
+    <div v-if="!formObj.domain && !formObj.mail && !formObj.mysql && !formObj.postgresql"
+         class="row text-center">
+        <div class="alert alert-warning"
+             role="alert">
+            There are currently no available products. Please check back later!
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
 import { useClientStore } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheIndex",
     setup() {
-        const { getProductTypes, localClientStore } = useClientStore();
-
-        const formObj = computed(() => {
-            return localClientStore.formObj;
-        });
+        const { formObj, getProductTypes } = useClientStore();
 
         onMounted(() => {
             getProductTypes();

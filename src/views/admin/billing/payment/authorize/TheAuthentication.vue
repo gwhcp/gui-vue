@@ -51,9 +51,9 @@
 
 <script lang="ts">
 import { InputSwitch, InputText } from "@/components"
-import { useAuth, useAdminBillingPayment } from "@/composables";
+import { useAdminBillingPayment, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { boolean, object, string } from "yup";
 import { useRoute } from "vue-router";
 
@@ -65,31 +65,25 @@ export default defineComponent({
         InputText
     },
     setup() {
+        const {
+            formErrors,
+            formObj,
+            formSuccess,
+            getAuthentication,
+            updateAuthentication
+        } = useAdminBillingPayment();
+
         const { hasPermForm } = useAuth();
 
-        const { getAuthentication, localBillingPayment, updateAuthentication } = useAdminBillingPayment();
-
         const route = useRoute();
-
-        const formErrors = computed(() => {
-            return localBillingPayment.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localBillingPayment.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localBillingPayment.formSuccess;
-        });
 
         const paymentId = route.params.id.toString();
 
         const schema = object({
-            login_id: string().required().nullable(),
-            transaction_key: string().required().nullable(),
             in_test_mode: boolean(),
-            is_active: boolean()
+            is_active: boolean(),
+            login_id: string().required().nullable(),
+            transaction_key: string().required().nullable()
         });
 
         onMounted(() => {

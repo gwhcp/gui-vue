@@ -1,25 +1,34 @@
 import { client, usePageLoading } from "@/composables";
-import { reactive } from "vue";
+import { computed, ComputedRef, reactive } from "vue";
 
 interface UseAdminSettingBannedInterface {
+    choices: ComputedRef<Record<string, string>>;
     createBanned: (values: Record<string, unknown>) => Promise<void>;
     deleteBanned: (values: {
         id: string;
     }) => Promise<void>;
+    formArr: ComputedRef<string[]>;
+    formErrors: ComputedRef<Record<string, unknown>>;
+    formObj: ComputedRef<{
+        banned_type: string;
+        banned_type_name: string;
+        date_from: string;
+        id: number;
+        name: string;
+        status: string;
+    }>;
+    formSuccess: ComputedRef<boolean>;
     getChoices: () => Promise<void>;
     getProfile: (id: string) => Promise<void>;
     getSearch: () => Promise<void>;
-    localSettingBanned: {
-        choices: Record<string, unknown>;
-        formArr: string[];
-        formErrors: Record<string, unknown>;
-        formObj: Record<string, unknown>;
-        formSuccess: boolean;
-    };
 }
 
 export const useAdminSettingBanned = (): UseAdminSettingBannedInterface => {
     const { loadingState } = usePageLoading();
+
+    const choices = computed(() => {
+        return localSettingBanned.choices;
+    });
 
     const createBanned = async (values: Record<string, unknown>) => {
         loadingState.isActive = true;
@@ -60,6 +69,22 @@ export const useAdminSettingBanned = (): UseAdminSettingBannedInterface => {
         return response.error;
     };
 
+    const formArr = computed(() => {
+        return localSettingBanned.formArr;
+    });
+
+    const formErrors = computed(() => {
+        return localSettingBanned.formErrors;
+    });
+
+    const formObj = computed(() => {
+        return localSettingBanned.formObj;
+    });
+
+    const formSuccess = computed(() => {
+        return localSettingBanned.formSuccess;
+    });
+
     const getChoices = async () => {
         localSettingBanned.choices = await client.get(
             'admin/setting/banned/choices'
@@ -90,16 +115,27 @@ export const useAdminSettingBanned = (): UseAdminSettingBannedInterface => {
         choices: {},
         formArr: [],
         formErrors: {},
-        formObj: {},
+        formObj: {
+            banned_type: '',
+            banned_type_name: '',
+            date_from: '',
+            id: 0,
+            name: '',
+            status: ''
+        },
         formSuccess: false
     });
 
     return {
+        choices,
         createBanned,
         deleteBanned,
+        formArr,
+        formErrors,
+        formObj,
+        formSuccess,
         getChoices,
         getProfile,
-        getSearch,
-        localSettingBanned
+        getSearch
     };
 };

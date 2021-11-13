@@ -44,9 +44,9 @@
 </template>
 
 <script lang="ts">
-import { useAuth, useAdminCompanyDns } from "@/composables";
+import { useAdminCompanyDns, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import VueMultiselect from "vue-multiselect";
 import { useRoute } from "vue-router";
 
@@ -57,25 +57,20 @@ export default defineComponent({
         VueMultiselect
     },
     setup() {
-        const { hasPermForm } = useAuth();
+        const {
+            formSuccess,
+            getNameserverBase,
+            getNameserverDomain,
+            nameserverBase,
+            nameserverDomain,
+            updateNameserver
+        } = useAdminCompanyDns();
 
-        const { getNameserverBase, getNameserverDomain, localCompanyDns, updateNameserver } = useAdminCompanyDns();
+        const { hasPermForm } = useAuth();
 
         const route = useRoute();
 
         const domainId = route.params.id.toString();
-
-        const formSuccess = computed(() => {
-            return localCompanyDns.formSuccess;
-        });
-
-        const nameserverBase = computed(() => {
-            return localCompanyDns.nameserverBase;
-        });
-
-        const nameserverDomain = computed(() => {
-            return localCompanyDns.nameserverDomain;
-        });
 
         const selected: any = ref([]);
 

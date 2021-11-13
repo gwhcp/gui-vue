@@ -41,9 +41,9 @@
 
 <script lang="ts">
 import { InputText, InputWysiwyg, StaticData } from "@/components";
-import { useAuth, useAdminSettingEmail } from "@/composables";
+import { useAdminSettingEmail, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { object, string } from "yup";
 
@@ -56,23 +56,11 @@ export default defineComponent({
         StaticData
     },
     setup() {
+        const { formErrors, formObj, formSuccess, getProfile, updateProfile } = useAdminSettingEmail();
+
         const { hasPermForm } = useAuth();
 
-        const { getProfile, localSettingEmail, updateProfile } = useAdminSettingEmail();
-
         const route = useRoute();
-
-        const formErrors = computed(() => {
-            return localSettingEmail.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localSettingEmail.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localSettingEmail.formSuccess;
-        });
 
         const schema = object({
             body: string().required(),

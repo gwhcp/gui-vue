@@ -48,7 +48,7 @@
 <script lang="ts">
 import { SearchGrid, StaticData } from "@/components";
 import { useClientBilling, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -58,7 +58,7 @@ export default defineComponent({
         StaticData
     },
     setup() {
-        const { getProfileInvoice, localClientBilling } = useClientBilling();
+        const { formObj, getProfileInvoice } = useClientBilling();
 
         const route = useRoute();
 
@@ -113,10 +113,6 @@ export default defineComponent({
         const invoiceId = route.params.invoice_id.toString();
 
         const profileId = route.params.id.toString();
-
-        const formObj = computed(() => {
-            return localClientBilling.formObj;
-        });
 
         onMounted(() => {
             getProfileInvoice(profileId, invoiceId);

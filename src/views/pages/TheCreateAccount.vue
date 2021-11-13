@@ -101,7 +101,7 @@
 import { InputSelectCountry, InputSelectState, InputText } from "@/components";
 import { useClientAccount } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent } from "vue";
+import { defineComponent } from "vue";
 import { number, object, string } from "yup";
 
 export default defineComponent({
@@ -113,32 +113,20 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { createAccount, localClientAccount } = useClientAccount();
-
-        const formErrors = computed(() => {
-            return localClientAccount.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localClientAccount.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localClientAccount.formSuccess;
-        });
+        const { createAccount, formErrors, formObj, formSuccess } = useClientAccount();
 
         const schema = object({
-            first_name: string().required(),
-            last_name: string().required(),
             address: string().required(),
             city: string().required(),
             country: string().required(),
-            state: string().required(),
-            zipcode: string().required(),
+            email: string().required().email(),
+            first_name: string().required(),
+            last_name: string().required(),
+            password: string().required().min(5),
             primary_phone: number().required().positive().integer(),
             secondary_phone: number().positive().integer().nullable(),
-            email: string().required().email(),
-            password: string().required().min(5)
+            state: string().required(),
+            zipcode: string().required()
         });
 
         return {

@@ -12,7 +12,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected"
+        <div v-if="cellSelected"
              class="col-auto">
             <router-link :to="{ name: 'admin:company:company:profile', params: { id: cellParams['id'] } }">
                 <button class="btn btn-primary"
@@ -24,7 +24,7 @@
             </router-link>
         </div>
 
-        <div v-if="selected && hasPerm('admin_company_company.delete_company')"
+        <div v-if="cellSelected && hasPerm('admin_company_company.delete_company')"
              class="col-auto">
             <modal-open-delete :delete="deleteCompany"
                                :form-arr="formArr"
@@ -40,8 +40,8 @@
 
 <script lang="ts">
 import { ModalOpenDelete, SearchGrid } from "@/components";
-import { useAuth, useAdminCompanyCompany, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { useAdminCompanyCompany, useAuth, useSearchGrid } from "@/composables";
+import { defineComponent, onMounted } from "vue";
 
 export default defineComponent({
     name: "TheSearch",
@@ -50,15 +50,11 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
+        const { deleteCompany, formArr, getSearch } = useAdminCompanyCompany();
+
         const { hasPerm } = useAuth();
 
-        const { deleteCompany, getSearch, localCompanyCompany } = useAdminCompanyCompany();
-
-        const { filterString, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { cellParams, cellSelected, filterString } = useSearchGrid();
 
         const columnDefs = [
             {
@@ -76,25 +72,17 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localCompanyCompany.formArr;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getSearch();
         });
 
         return {
             cellParams,
+            cellSelected,
             columnDefs,
             deleteCompany,
             formArr,
-            hasPerm,
-            selected
+            hasPerm
         };
     }
 });

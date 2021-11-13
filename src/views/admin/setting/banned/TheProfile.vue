@@ -21,7 +21,7 @@
 <script lang="ts">
 import { StaticData } from "@/components";
 import { useAdminSettingBanned } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -30,15 +30,11 @@ export default defineComponent({
         StaticData
     },
     setup() {
-        const { getProfile, localSettingBanned } = useAdminSettingBanned();
+        const { formObj, getProfile } = useAdminSettingBanned();
 
         const route = useRoute();
 
         const bannedId = route.params.id.toString();
-
-        const formObj = computed(() => {
-            return localSettingBanned.formObj;
-        });
 
         onMounted(() => {
             getProfile(bannedId);

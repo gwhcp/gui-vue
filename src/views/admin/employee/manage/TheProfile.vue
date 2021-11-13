@@ -89,9 +89,9 @@
 
 <script lang="ts">
 import { InputSelectCountry, InputSelectState, InputText, StaticData } from "@/components";
-import { useAuth, useAdminEmployeeManage } from "@/composables";
+import { useAdminEmployeeManage, useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { number, object, string } from "yup";
 
@@ -105,37 +105,25 @@ export default defineComponent({
         StaticData
     },
     setup() {
-        const { hasPermForm } = useAuth();
+        const { formErrors, formObj, formSuccess, getProfile, updateProfile } = useAdminEmployeeManage();
 
-        const { getProfile, localEmployeeManage, updateProfile } = useAdminEmployeeManage();
+        const { hasPermForm } = useAuth();
 
         const route = useRoute();
 
         const accountId = route.params.id.toString();
 
-        const formErrors = computed(() => {
-            return localEmployeeManage.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localEmployeeManage.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localEmployeeManage.formSuccess;
-        });
-
         const schema = object({
-            first_name: string().required(),
-            last_name: string().required(),
             address: string().required(),
             city: string().required(),
             country: string().required(),
-            state: string().required(),
-            zipcode: string().required(),
+            email: string().required().email(),
+            first_name: string().required(),
+            last_name: string().required(),
             primary_phone: number().required().positive().integer(),
             secondary_phone: number().positive().integer().nullable(),
-            email: string().required().email()
+            state: string().required(),
+            zipcode: string().required()
         });
 
         onMounted(() => {

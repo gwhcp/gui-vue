@@ -41,7 +41,7 @@
 import { InputText } from "@/components";
 import { useAuth } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent } from "vue";
+import { defineComponent } from "vue";
 import { object, string } from "yup";
 
 export default defineComponent({
@@ -51,23 +51,7 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { localAuth, login } = useAuth();
-
-        const formErrors = computed(() => {
-            return localAuth.formErrors;
-        });
-
-        const formSuccess = computed(() => {
-            return localAuth.formSuccess;
-        });
-
-        const nonFieldFormError = computed(() => {
-            return localAuth.nonFieldFormError;
-        });
-
-        const nonFieldFormMessage = computed(() => {
-            return localAuth.nonFieldFormMessage;
-        });
+        const { formErrors, formSuccess, login, nonFieldFormError, nonFieldFormMessage } = useAuth();
 
         const schema = object({
             email: string().required().min(5).email(),

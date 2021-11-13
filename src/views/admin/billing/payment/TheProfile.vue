@@ -40,7 +40,7 @@
 <script lang="ts">
 import { StaticData } from "@/components";
 import { useAdminBillingPayment } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -49,13 +49,9 @@ export default defineComponent({
         StaticData
     },
     setup() {
-        const { getProfile, localBillingPayment } = useAdminBillingPayment();
+        const { formObj, getProfile } = useAdminBillingPayment();
 
         const route = useRoute();
-
-        const formObj = computed(() => {
-            return localBillingPayment.formObj;
-        });
 
         const paymentId = route.params.id.toString();
 

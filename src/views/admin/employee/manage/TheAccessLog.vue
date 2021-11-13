@@ -20,7 +20,7 @@
 <script lang="ts">
 import { SearchGrid } from "@/components";
 import { useAdminEmployeeManage, useSearchGrid } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -29,15 +29,11 @@ export default defineComponent({
         SearchGrid
     },
     setup() {
-        const { getAccessLog, localEmployeeManage } = useAdminEmployeeManage();
+        const { formArr, getAccessLog } = useAdminEmployeeManage();
 
         const route = useRoute();
 
-        const { filterDate, filterString, formatDate, globalGrid } = useSearchGrid();
-
-        const cellParams = computed(() => {
-            return globalGrid.cellParams;
-        });
+        const { filterDate, filterString, formatDate } = useSearchGrid();
 
         const accountId = route.params.id.toString();
 
@@ -63,24 +59,14 @@ export default defineComponent({
             }
         ];
 
-        const formArr = computed(() => {
-            return localEmployeeManage.formArr;
-        });
-
-        const selected = computed(() => {
-            return globalGrid.selected;
-        });
-
         onMounted(() => {
             getAccessLog(accountId);
         });
 
         return {
             accountId,
-            cellParams,
             columnDefs,
-            formArr,
-            selected
+            formArr
         };
     }
 });

@@ -30,7 +30,7 @@
 import { InputSelect, InputText } from "@/components";
 import { useAdminCompanyDomain } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { number, object, string } from "yup";
 
 export default defineComponent({
@@ -41,23 +41,7 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { createDomain, getChoices, localCompanyDomain } = useAdminCompanyDomain();
-
-        const choices = computed(() => {
-            return localCompanyDomain.choices;
-        });
-
-        const formErrors = computed(() => {
-            return localCompanyDomain.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localCompanyDomain.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localCompanyDomain.formSuccess;
-        });
+        const { choices, createDomain, formErrors, formObj, formSuccess, getChoices } = useAdminCompanyDomain();
 
         const schema = object({
             company: number().required().positive().integer(),

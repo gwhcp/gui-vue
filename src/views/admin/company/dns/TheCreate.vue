@@ -55,7 +55,7 @@
 import { InputSelect, InputText } from "@/components";
 import { useAdminCompanyDns } from "@/composables";
 import { Form } from "vee-validate";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { number, object, string } from "yup";
 
@@ -67,36 +67,20 @@ export default defineComponent({
         InputText
     },
     setup() {
-        const { createRecord, getChoices, localCompanyDns } = useAdminCompanyDns();
+        const { choices, createRecord, formErrors, formObj, formSuccess, getChoices } = useAdminCompanyDns();
 
         const route = useRoute();
 
-        const choices = computed(() => {
-            return localCompanyDns.choices;
-        });
-
         const domainId = route.params.id.toString();
 
-        const formErrors = computed(() => {
-            return localCompanyDns.formErrors;
-        });
-
-        const formObj = computed(() => {
-            return localCompanyDns.formObj;
-        });
-
-        const formSuccess = computed(() => {
-            return localCompanyDns.formSuccess;
-        });
-
         const schema = object({
+            data: string().required(),
             host: string(),
-            record_type: string().required(),
             mx_priority: number().when('record_type', {
                 is: 'MX',
                 then: number().positive().integer().required()
             }),
-            data: string().required()
+            record_type: string().required()
         });
 
         onMounted(() => {

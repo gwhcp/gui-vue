@@ -21,7 +21,7 @@
 <script lang="ts">
 import { StaticData } from "@/components";
 import { useAdminStoreFraud } from "@/composables";
-import { computed, defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -30,13 +30,9 @@ export default defineComponent({
         StaticData
     },
     setup() {
-        const { getProfile, localStoreFraud } = useAdminStoreFraud();
+        const { formObj, getProfile } = useAdminStoreFraud();
 
         const route = useRoute();
-
-        const formObj = computed(() => {
-            return localStoreFraud.formObj;
-        });
 
         const fraudId = route.params.id.toString();
 
