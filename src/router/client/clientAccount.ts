@@ -1,6 +1,6 @@
+import { useAuth } from "@/composables";
 import router, { RouteInterface } from "@/router";
 import { computed, h, resolveComponent } from "vue";
-import { useAuth } from "@/composables";
 
 const section = 'Account';
 
