@@ -11,6 +11,10 @@
         <router-link :to="{ name: 'admin:store:product:price:search', params: { productId: productId, type: productType } }"
                      class="nav-link">Prices
         </router-link>
+
+        <a aria-current="page"
+           class="nav-link active disabled"
+           href="#">Price Profile</a>
     </nav>
 
     <Form :validation-schema="schema"
@@ -27,8 +31,7 @@
                     <static-data :datetime="formObj.date_from"
                                  name="Created Date"/>
 
-                    <!-- TODO months? thought this was days... -->
-                    <static-data :text_right="'Month(s)'"
+                    <static-data :text_right="'Days(s)'"
                                  :value="formObj.billing_cycle"
                                  name="Billing Cycle"/>
 

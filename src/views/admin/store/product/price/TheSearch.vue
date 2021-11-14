@@ -28,7 +28,7 @@
 
         <div v-if="cellSelected"
              class="col-auto">
-            <router-link :to="{ name: 'admin:store:product:price:profile', params: { id: cellParams['id'], productId: cellParams['store_product'] } }">
+            <router-link :to="{ name: 'admin:store:product:price:profile', params: { id: cellParams['id'], productId: productId } }">
                 <button class="btn btn-primary"
                         type="button">
                     <span class="pe-2">
@@ -42,7 +42,7 @@
              class="col-auto">
             <modal-open-delete :delete="deletePrice"
                                :form-arr="formArr"
-                               :params="{ id: cellParams['id'], productId: cellParams['store_product'] }"
+                               :params="{ id: cellParams['id'], productId: productId }"
                                message-alert="Continuing will remove this product price."
                                message-success="Product price has been removed."/>
         </div>
