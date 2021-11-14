@@ -1,11 +1,12 @@
 import { adminBillingPaymentRoutes } from "@/router/admin/billingPayment";
 import { adminBillingReasonRoutes } from "@/router/admin/billingReason";
-import { adminClientOrderRoutes } from "@/router/admin/clientOrder";
 import { adminCompanyCompanyRoutes } from "@/router/admin/companyCompany";
 import { adminCompanyDnsRoutes } from "@/router/admin/companyDns";
 import { adminCompanyDomainRoutes } from "@/router/admin/companyDomain";
 import { adminCompanyMailRoutes } from "@/router/admin/companyMail";
 import { adminCompanyXmppRoutes } from "@/router/admin/companyXmpp";
+import { adminCustomerAccountRoutes } from "@/router/admin/customerAccount";
+import { adminCustomerOrderRoutes } from "@/router/admin/customerOrder";
 import { adminEmployeeAccountRoutes } from "@/router/admin/employeeAccount";
 import { adminEmployeeMailRoutes } from "@/router/admin/employeeMail";
 import { adminEmployeeManageRoutes } from "@/router/admin/employeeManage";
@@ -24,12 +25,13 @@ import { adminStoreProductPriceRoutes } from "@/router/admin/storeProductPrice";
 export {
     adminBillingPaymentRoutes,
     adminBillingReasonRoutes,
-    adminClientOrderRoutes,
     adminCompanyCompanyRoutes,
     adminCompanyDnsRoutes,
     adminCompanyDomainRoutes,
     adminCompanyMailRoutes,
     adminCompanyXmppRoutes,
+    adminCustomerAccountRoutes,
+    adminCustomerOrderRoutes,
     adminEmployeeAccountRoutes,
     adminEmployeeMailRoutes,
     adminEmployeeManageRoutes,

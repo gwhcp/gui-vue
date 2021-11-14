@@ -7,9 +7,9 @@
                  class="accordion-flush">
                 <the-sidebar-admin-billing v-if="accountProfile['is_staff']"/>
 
-                <the-sidebar-admin-client v-if="accountProfile['is_staff']"/>
-
                 <the-sidebar-admin-company v-if="accountProfile['is_staff']"/>
+
+                <the-sidebar-admin-customer v-if="accountProfile['is_staff']"/>
 
                 <the-sidebar-admin-employee v-if="accountProfile['is_staff']"/>
 
@@ -35,8 +35,8 @@
 import { useAuth, useSidebar } from "@/composables";
 import {
     TheSidebarAdminBilling,
-    TheSidebarAdminClient,
     TheSidebarAdminCompany,
+    TheSidebarAdminCustomer,
     TheSidebarAdminEmployee,
     TheSidebarAdminHardware,
     TheSidebarAdminNetwork,
@@ -50,8 +50,8 @@ export default defineComponent({
     name: "TheSidebar",
     components: {
         TheSidebarAdminBilling,
-        TheSidebarAdminClient,
         TheSidebarAdminCompany,
+        TheSidebarAdminCustomer,
         TheSidebarAdminEmployee,
         TheSidebarAdminHardware,
         TheSidebarAdminNetwork,

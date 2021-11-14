@@ -5,6 +5,7 @@ import { useAdminCompanyDns } from "@/composables/admin/companyDns";
 import { useAdminCompanyDomain } from "@/composables/admin/companyDomain";
 import { useAdminCompanyMail } from "@/composables/admin/companyMail";
 import { useAdminCompanyXmpp } from "@/composables/admin/companyXmpp";
+import { useAdminCustomerAccount } from "@/composables/admin/customerAccount";
 import { useAdminEmployeeAccount } from "@/composables/admin/employeeAccount";
 import { useAdminEmployeeMail } from "@/composables/admin/employeeMail";
 import { useAdminEmployeeManage } from "@/composables/admin/employeeManage";
@@ -28,6 +29,7 @@ export {
     useAdminCompanyDomain,
     useAdminCompanyMail,
     useAdminCompanyXmpp,
+    useAdminCustomerAccount,
     useAdminEmployeeAccount,
     useAdminEmployeeMail,
     useAdminEmployeeManage,

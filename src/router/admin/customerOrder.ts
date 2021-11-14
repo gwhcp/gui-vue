@@ -2,15 +2,15 @@ import router, { RouteInterface } from "@/router";
 import { computed, h, resolveComponent } from "vue";
 import { useAuth } from "@/composables";
 
-const section = 'Client Orders';
+const section = 'Customer Orders';
 
-export const adminClientOrderRoutes = (checkPermission: () => (permissions: string[]) => void): RouteInterface => {
+export const adminCustomerOrderRoutes = (checkPermission: () => (permissions: string[]) => void): RouteInterface => {
     return {
-        path: '/admin/client/order',
+        path: '/admin/customer/order',
         redirect: {
-            name: 'admin:client:order:search'
+            name: 'admin:customer:order:search'
         },
-        name: 'admin:client:order',
+        name: 'admin:customer:order',
         component: {
             render() {
                 return h(resolveComponent('router-view'));
@@ -30,29 +30,29 @@ export const adminClientOrderRoutes = (checkPermission: () => (permissions: stri
         children: [
             /*{
                 path: 'profile/:id',
-                name: 'admin:client:order:profile',
+                name: 'admin:customer:order:profile',
                 meta: {
                     label: 'Profile',
                     section: section
                 },
-                component: () => import('@/views/admin/client/order/TheProfile.vue'),
+                component: () => import('@/views/admin/customer/order/TheProfile.vue'),
                 beforeEnter: () => {
                     checkPermission()([
-                        'admin_client_order.view_order'
+                        'admin_customer_order.view_order'
                     ]);
                 }
             },*/
             {
                 path: 'search',
-                name: 'admin:client:order:search',
+                name: 'admin:customer:order:search',
                 meta: {
                     label: 'Search',
                     section: section
                 },
-                component: () => import('@/views/admin/client/order/TheSearch.vue'),
+                component: () => import('@/views/admin/customer/order/TheSearch.vue'),
                 beforeEnter: () => {
                     checkPermission()([
-                        'admin_client_order.view_order'
+                        'admin_customer_order.view_order'
                     ]);
                 }
             }

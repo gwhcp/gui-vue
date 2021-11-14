@@ -1,5 +1,5 @@
 import TheSidebarAdminBilling from "@/containers/sidebar/admin/TheSidebarBilling.vue";
-import TheSidebarAdminClient from "@/containers/sidebar/admin/TheSidebarClient.vue";
+import TheSidebarAdminCustomer from "@/containers/sidebar/admin/TheSidebarCustomer.vue";
 import TheSidebarAdminCompany from "@/containers/sidebar/admin/TheSidebarCompany.vue";
 import TheSidebarAdminEmployee from "@/containers/sidebar/admin/TheSidebarEmployee.vue";
 import TheSidebarAdminHardware from "@/containers/sidebar/admin/TheSidebarHardware.vue";
@@ -9,7 +9,7 @@ import TheSidebarAdminStore from "@/containers/sidebar/admin/TheSidebarStore.vue
 
 export {
     TheSidebarAdminBilling,
-    TheSidebarAdminClient,
+    TheSidebarAdminCustomer,
     TheSidebarAdminCompany,
     TheSidebarAdminEmployee,
     TheSidebarAdminHardware,
