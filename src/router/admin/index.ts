@@ -6,6 +6,7 @@ import { adminCompanyDomainRoutes } from "@/router/admin/companyDomain";
 import { adminCompanyMailRoutes } from "@/router/admin/companyMail";
 import { adminCompanyXmppRoutes } from "@/router/admin/companyXmpp";
 import { adminCustomerAccountRoutes } from "@/router/admin/customerAccount";
+import { adminCustomerBillingRoutes } from "@/router/admin/customerBilling";
 import { adminCustomerOrderRoutes } from "@/router/admin/customerOrder";
 import { adminEmployeeAccountRoutes } from "@/router/admin/employeeAccount";
 import { adminEmployeeMailRoutes } from "@/router/admin/employeeMail";
@@ -31,6 +32,7 @@ export {
     adminCompanyMailRoutes,
     adminCompanyXmppRoutes,
     adminCustomerAccountRoutes,
+    adminCustomerBillingRoutes,
     adminCustomerOrderRoutes,
     adminEmployeeAccountRoutes,
     adminEmployeeMailRoutes,

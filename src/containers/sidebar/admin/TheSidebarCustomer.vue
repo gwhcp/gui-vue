@@ -27,7 +27,7 @@
                 </router-link>
 
                 <router-link v-if="hasPerm('admin_customer_billing.view_billingprofile')"
-                             :to="{ name: 'dashboard' }"
+                             :to="{ name: 'admin:customer:billing:search' }"
                              class="list-group-item list-group-item-action border-0">
                     Billing Profile
                 </router-link>

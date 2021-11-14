@@ -6,6 +6,7 @@ import { useAdminCompanyDomain } from "@/composables/admin/companyDomain";
 import { useAdminCompanyMail } from "@/composables/admin/companyMail";
 import { useAdminCompanyXmpp } from "@/composables/admin/companyXmpp";
 import { useAdminCustomerAccount } from "@/composables/admin/customerAccount";
+import { useAdminCustomerBilling } from "@/composables/admin/customerBilling";
 import { useAdminEmployeeAccount } from "@/composables/admin/employeeAccount";
 import { useAdminEmployeeMail } from "@/composables/admin/employeeMail";
 import { useAdminEmployeeManage } from "@/composables/admin/employeeManage";
@@ -30,6 +31,7 @@ export {
     useAdminCompanyMail,
     useAdminCompanyXmpp,
     useAdminCustomerAccount,
+    useAdminCustomerBilling,
     useAdminEmployeeAccount,
     useAdminEmployeeMail,
     useAdminEmployeeManage,
