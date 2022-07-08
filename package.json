@@ -20,7 +20,7 @@
     "bootstrap": "~5.1.3",
     "core-js": "~3.19.1",
     "mitt": "~3.0.0",
-    "moment": "~2.29.1",
+    "moment": "~2.29.4",
     "moment-timezone": "~0.5.34",
     "vee-validate": "~4.5.4",
     "vue": "~3.2.21",
