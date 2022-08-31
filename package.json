@@ -21,7 +21,7 @@
     "core-js": "~3.19.1",
     "mitt": "~3.0.0",
     "moment": "~2.29.1",
-    "moment-timezone": "~0.5.34",
+    "moment-timezone": "~0.5.35",
     "vee-validate": "~4.5.4",
     "vue": "~3.2.21",
     "vue-loading-overlay": "~4.0.4",
