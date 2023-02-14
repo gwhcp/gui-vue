@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@ag-grid-community/vue3": "~26.1.2",
-    "@ckeditor/ckeditor5-build-classic": "~31.0.0",
+    "@ckeditor/ckeditor5-build-classic": "~36.0.1",
     "@ckeditor/ckeditor5-vue": "~2.0.1",
     "@fortawesome/fontawesome-svg-core": "~1.2.36",
     "@fortawesome/free-regular-svg-icons": "~5.15.4",
